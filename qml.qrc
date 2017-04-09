@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Cell.qml</file>
+        <file>Field.qml</file>
+        <file>Nought.qml</file>
+        <file>Cross.qml</file>
+        <file>Button.qml</file>
+        <file>MainMenu.qml</file>
+        <file>Stats.qml</file>
+    </qresource>
+</RCC>
