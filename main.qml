@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Window 2.2
+import QtQuick.Controls 2.1
 import org.game.engine 1.0
 
 Window {
@@ -18,6 +19,7 @@ Window {
     }
 
     Connections {
+        id: connection
         target: loader.item
 
         onPageChanged: {
@@ -25,10 +27,22 @@ Window {
         }
     }
 
+    DialogBox {
+        id: dialog
+
+        onDialogClosed: {
+            loader.source = "MainMenu.qml"
+            gameModel.restartGame();
+        }
+    }
+
     GameModel {
         id: gameModel
-        score1: 0
-        score2: 0
         currentPlayer: 1
+
+        onWinnerChange: {
+            dialog.textToShow = "Player " + gameModel.winner + " won this game!"
+            dialog.showDialog();
+        }
     }
 }

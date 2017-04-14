@@ -15,10 +15,7 @@ Item {
             model: 9
             Cell {
                 width: 100; height: 100;
-
-                onGameFinished: {
-                    pageChanged("MainMenu.qml")
-                }
+                number: index
             }
         }
     }

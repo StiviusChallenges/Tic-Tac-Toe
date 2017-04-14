@@ -2,9 +2,9 @@ import QtQuick 2.0
 
 Item {
     id: cell
-    property color clr: "black"
+    property color shapeColor: "black"
+    property int number
     property bool occupied: false
-    signal gameFinished
 
     Rectangle {
         id: rect
@@ -17,21 +17,22 @@ Item {
             hoverEnabled: true
 
             onClicked: {
-                if(!occupied) {
+                if(!occupied && !gameModel.gameFinished) {
                     cell.state = (gameModel.currentPlayer === 1) ? "cross" :"nought"
                     occupied = true
+                    gameModel.currentCell = number
                     gameModel.currentPlayer = (gameModel.currentPlayer === 1) ? 2 : 1
                 }
             }
 
             onEntered: {
-                if(!occupied) {
+                if(!occupied && !gameModel.gameFinished) {
                     cell.state = (gameModel.currentPlayer === 1) ? "cross" :"nought"
                 }
             }
 
             onExited: {
-                if(!occupied) {
+                if(!occupied && !gameModel.gameFinished) {
                     cell.state = "empty"
                 }
             }
@@ -50,8 +51,8 @@ Item {
     Binding {
         id: binder
 
-        property: "clr"
-        value: clr
+        property: "shapeColor"
+        value: shapeColor
     }
 
     states: [
@@ -61,12 +62,12 @@ Item {
         },
         State {
             name: "nought"
-            PropertyChanges { target: cell; clr: (occupied) ? "black" : "darkgrey"; }
+            PropertyChanges { target: cell; shapeColor: (occupied) ? "black" : "darkgrey"; }
             PropertyChanges { target: dialLoader; source: "Nought.qml"; }
         },
         State {
             name: "cross"
-            PropertyChanges { target: cell; clr: (occupied) ? "black" : "darkgrey"; }
+            PropertyChanges { target: cell; shapeColor: (occupied) ? "black" : "darkgrey"; }
             PropertyChanges { target: dialLoader; source: "Cross.qml"; }
         }
     ]

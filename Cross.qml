@@ -2,13 +2,13 @@ import QtQuick 2.0
 
 Item {
     id: cross
-    property color clr: "black"
+    property color shapeColor: "black"
 
     Rectangle {
         width: 80
         height: 4
         rotation: 45
-        color: clr
+        color: shapeColor
         anchors.centerIn: parent
     }
 
@@ -16,7 +16,7 @@ Item {
         width: 80
         height: 4
         rotation: 135
-        color: clr
+        color: shapeColor
         anchors.centerIn: parent
     }
 }

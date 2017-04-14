@@ -1,59 +1,82 @@
 #include "gamemodel.hpp"
 
-const int FIELD_SIZE = 9;
+#include <QDebug>
 
-GameModel::GameModel(QObject *parent) : QObject(parent), m_cells(FIELD_SIZE)
+const int SIDE_SIZE = 3;
+const int EMPTY_CELL = 0;
+
+GameModel::GameModel(QObject *parent) :
+    QObject(parent), m_cells(SIDE_SIZE, std::vector<int>(SIDE_SIZE, EMPTY_CELL))
 {
-    std::fill(m_cells.begin(), m_cells.end(), 0);
-    m_currentPlayer = 1;
-    m_score1 = m_score2 = m_winner = 0;
+    connect(this, &GameModel::restartGame, this, [=](){
+        m_gameFinished = false;
+        clearCells();
+    });
 }
 
-void GameModel::checkField() // check if one of the player wins
+bool GameModel::horizontalWin()
 {
-    for(int i = 0; i != FIELD_SIZE; i += 3)
+    for(int i = 0; i != SIDE_SIZE; ++i)
     {
-        if(m_cells[i] == m_cells[i+1] && m_cells[i+1] == m_cells[i+2] && m_cells[i] == m_cells[i+2]) // vertical
+        int currentCell = m_cells[i][0];
+        int count = 0;
+        for(int j = 0; j != SIDE_SIZE; ++j)
         {
-            if(m_cells[i] != 0)
-            {
-                m_winner = m_cells[i];
-                std::fill(m_cells.begin(), m_cells.end(), 0);
-                return;
-            }
-        }
-    }
-    for(int i = 0; i != 3; i++)
-    {
-        if(m_cells[i] == m_cells[i+3] && m_cells[i+3] == m_cells[i+6] && m_cells[i] == m_cells[i+6]) // horizontal
-        {
-            if(m_cells[i] != 0)
-            {
-                m_winner = m_cells[i];
-                std::fill(m_cells.begin(), m_cells.end(), 0);
-                return;
-            }
-        }
-    }
-    if(m_cells[0] == m_cells[4] && m_cells[4] == m_cells[8] && m_cells[0] == m_cells[8]) // 1st diagonal
-    {
-        if(m_cells[0] != 0)
-        {
-            m_winner = m_cells[0];
-            std::fill(m_cells.begin(), m_cells.end(), 0);
-            return;
+            if(currentCell != m_cells[i][j] || currentCell == 0)
+                break;
+            ++count;
         }
 
+        if(count == SIDE_SIZE)
+            return true;
     }
-    else if(m_cells[2] == m_cells[4] && m_cells[4] == m_cells[6] && m_cells[2] == m_cells[6]) // 2nd diagonal
+    return false;
+}
+
+bool GameModel::verticalWin()
+{
+    for(int j = 0; j != SIDE_SIZE; ++j)
     {
-        if(m_cells[2] != 0)
+        int currentCell = m_cells[0][j];
+        int count = 0;
+        for(int i = 0; i != SIDE_SIZE; ++i)
         {
-            m_winner = m_cells[2];
-            std::fill(m_cells.begin(), m_cells.end(), 0);
-            return;
+            if(currentCell != m_cells[i][j] || currentCell == 0)
+                break;
+            ++count;
         }
+
+        if(count == SIDE_SIZE)
+            return true;
     }
+    return false;
+}
+
+bool GameModel::diagonalWin()
+{
+    int firstCount = 0, secondCount = 0;
+    int currentFirstCell = m_cells[0][0];
+    int currentSecondCell = m_cells[0][SIDE_SIZE - 1];
+    for(int i = 0; i != SIDE_SIZE; ++i)
+    {
+        if(currentFirstCell == m_cells[i][i] && currentFirstCell != 0)
+            firstCount++;
+
+        if(currentSecondCell == m_cells[i][SIDE_SIZE - 1 - i] && currentSecondCell != 0)
+            secondCount++;
+    }
+
+    if(firstCount == SIDE_SIZE)
+        return true;
+    else if(secondCount == SIDE_SIZE)
+        return true;
+
+    return false;
+}
+
+void GameModel::clearCells()
+{
+    std::fill(m_cells.begin(), m_cells.end(), std::vector<int>(SIDE_SIZE, EMPTY_CELL));
 }
 
 int GameModel::winner() const
@@ -61,10 +84,27 @@ int GameModel::winner() const
     return m_winner;
 }
 
-void GameModel::setWinner(int wnr)
-{
-    m_winner = wnr;
+void GameModel::setWinner(int winner)
+{  
+
+    m_winner = winner;
     emit winnerChange();
+}
+
+bool GameModel::gameFinished() const
+{
+    return m_gameFinished;
+}
+
+void GameModel::finishGame()
+{
+    if(m_currentPlayer == 1)
+        setScore1(m_score1 + 1);
+    else
+        setScore2(m_score2 + 1);
+
+    m_gameFinished = true;
+    setWinner(m_currentPlayer);
 }
 
 int GameModel::cell() const
@@ -75,8 +115,11 @@ int GameModel::cell() const
 void GameModel::setCell(int cell)
 {
     m_currentCell = cell;
-    m_cells[m_currentCell] = m_currentPlayer;
-    checkField();
+    m_cells[m_currentCell / SIDE_SIZE][m_currentCell % SIDE_SIZE] = m_currentPlayer;
+    if(horizontalWin() || verticalWin() || diagonalWin())
+    {
+        finishGame();
+    }
 }
 
 int GameModel::currentPlayer() const

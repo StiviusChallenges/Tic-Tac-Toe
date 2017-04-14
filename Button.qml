@@ -2,6 +2,7 @@ import QtQuick 2.0
 
 Item {
     property string textButton
+    property int textFontSize: 24
     signal buttonClicked
 
     id: root
@@ -39,7 +40,7 @@ Item {
             id: text
             text: textButton
             color: "black"
-            font.pixelSize: 24
+            font.pixelSize: textFontSize
             anchors.centerIn: parent
         }
     }
