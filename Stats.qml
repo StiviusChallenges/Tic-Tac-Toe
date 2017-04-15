@@ -7,7 +7,7 @@ Item {
         id: statsModel
 
         Component.onCompleted: {
-             append({name: "Total scores: ", value: gameModel.score1 + gameModel.score2});
+             append({name: "Total games: ", value: gameModel.totalGames});
              append({name: "Player 1 scores: ", value: gameModel.score1});
              append({name: "Player 2 scores: ", value: gameModel.score2});
         }

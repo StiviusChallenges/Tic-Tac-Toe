@@ -13,6 +13,7 @@ class GameModel : public QObject
     Q_PROPERTY(int currentCell READ cell WRITE setCell)
     Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
     Q_PROPERTY(int sideSize READ sideSize WRITE setSideSize NOTIFY sideSizeChanged)
+    Q_PROPERTY(int totalGames READ totalGames WRITE setTotalGames NOTIFY totalGamesChanged)
     Q_PROPERTY(bool gameFinished READ gameFinished)
 
 signals:
@@ -21,6 +22,7 @@ signals:
     void winnerChange();
     void restartGame();
     void sideSizeChanged();
+    void totalGamesChanged();
 
 public:
     explicit GameModel(QObject* parent = nullptr);
@@ -45,8 +47,17 @@ public:
     int sideSize() const;
     void setSideSize(int sideSize);
 
+    int totalGames() const;
+    void setTotalGames(int totalGames);
+
 private:
-    void finishGame();
+    enum ResultEnum {
+        Draw,
+        Winner1st,
+        Winner2nd
+    };
+
+    void finishGame(ResultEnum result);
     bool horizontalWin();
     bool verticalWin();
     bool diagonalWin();
@@ -60,6 +71,7 @@ private:
     int m_score2 = 0;
     int m_currentPlayer = 1;
     int m_sideSize = 3;
+    int m_totalGames = 0;
     bool m_gameFinished = false;
 
 };

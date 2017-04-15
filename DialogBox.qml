@@ -16,7 +16,7 @@ Item {
         color: Qt.rgba(0, 0, 0, 0.75)
 
         Rectangle {
-            width: 225
+            width: 275
             height: 125
             anchors.centerIn: parent
             radius: 5

@@ -39,10 +39,17 @@ Window {
     GameModel {
         id: gameModel
         currentPlayer: 1
-        sideSize: 4
+        sideSize: 3
 
         onWinnerChange: {
-            dialog.textToShow = "Player " + gameModel.winner + " won this game!"
+            if(gameModel.winner)
+            {
+                dialog.textToShow = "Player " + gameModel.winner + " won this game!"
+            }
+            else
+            {
+                dialog.textToShow = "Draw! Nobody won this game."
+            }
             dialog.showDialog();
         }
     }

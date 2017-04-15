@@ -114,15 +114,36 @@ void GameModel::setSideSize(int sideSize)
     emit restartGame();
 }
 
-void GameModel::finishGame()
+int GameModel::totalGames() const
 {
-    if(m_currentPlayer == 1)
-        setScore1(m_score1 + 1);
-    else
-        setScore2(m_score2 + 1);
+    return m_totalGames;
+}
 
+void GameModel::setTotalGames(int totalGames)
+{
+    m_totalGames = totalGames;
+    emit totalGamesChanged();
+}
+
+void GameModel::finishGame(ResultEnum result)
+{
+    switch(result)
+    {
+    case Winner1st:
+        setScore1(m_score1 + 1);
+        setWinner(m_currentPlayer);
+        break;
+    case Winner2nd:
+        setScore2(m_score2 + 1);
+        setWinner(m_currentPlayer);
+        break;
+    default:
+        setWinner(0);
+        break;
+    }
+
+    setTotalGames(m_totalGames + 1);
     m_gameFinished = true;
-    setWinner(m_currentPlayer);
 }
 
 int GameModel::cell() const
@@ -136,7 +157,18 @@ void GameModel::setCell(int cell)
     m_field[m_currentCell / m_sideSize][m_currentCell % m_sideSize] = m_currentPlayer;
     if(horizontalWin() || verticalWin() || diagonalWin())
     {
-        finishGame();
+        ResultEnum result = static_cast<ResultEnum>(m_currentPlayer);
+        finishGame(result);
+    }
+    else
+    {
+        for(const auto& row : m_field)
+        {
+            auto foundIt = std::find(row.begin(), row.end(), EMPTY_CELL);
+            if(foundIt != row.end())
+                return;
+        }
+        finishGame(Draw);
     }
 }
 
