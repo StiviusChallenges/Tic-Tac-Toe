@@ -21,7 +21,7 @@ Item {
                     cell.state = (gameModel.currentPlayer === 1) ? "cross" :"nought"
                     occupied = true
                     gameModel.currentCell = number
-                    gameModel.currentPlayer = (gameModel.currentPlayer === 1) ? 2 : 1
+                    gameModel.changeTurn();
                 }
             }
 

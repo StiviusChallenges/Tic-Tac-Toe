@@ -15,6 +15,11 @@ GameModel::GameModel(QObject *parent) :
     });
 }
 
+void GameModel::changeTurn()
+{
+    m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+}
+
 bool GameModel::horizontalWin()
 {
     for(int i = 0; i != m_sideSize; ++i)

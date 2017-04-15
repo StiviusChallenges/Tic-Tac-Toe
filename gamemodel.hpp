@@ -27,6 +27,8 @@ signals:
 public:
     explicit GameModel(QObject* parent = nullptr);
 
+    Q_INVOKABLE void changeTurn();
+
     int currentPlayer() const;
     void setCurrentPlayer(int);
 
