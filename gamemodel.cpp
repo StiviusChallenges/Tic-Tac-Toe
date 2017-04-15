@@ -2,32 +2,33 @@
 
 #include <QDebug>
 
-const int SIDE_SIZE = 3;
 const int EMPTY_CELL = 0;
 
 GameModel::GameModel(QObject *parent) :
-    QObject(parent), m_cells(SIDE_SIZE, std::vector<int>(SIDE_SIZE, EMPTY_CELL))
+    QObject(parent), m_field(m_sideSize, std::vector<int>(m_sideSize, EMPTY_CELL))
 {
     connect(this, &GameModel::restartGame, this, [=](){
         m_gameFinished = false;
+        m_winner = 0;
+        m_currentCell = -1;
         clearCells();
     });
 }
 
 bool GameModel::horizontalWin()
 {
-    for(int i = 0; i != SIDE_SIZE; ++i)
+    for(int i = 0; i != m_sideSize; ++i)
     {
-        int currentCell = m_cells[i][0];
+        int currentCell = m_field[i][0];
         int count = 0;
-        for(int j = 0; j != SIDE_SIZE; ++j)
+        for(int j = 0; j != m_sideSize; ++j)
         {
-            if(currentCell != m_cells[i][j] || currentCell == 0)
+            if(currentCell != m_field[i][j] || currentCell == 0)
                 break;
             ++count;
         }
 
-        if(count == SIDE_SIZE)
+        if(count == m_sideSize)
             return true;
     }
     return false;
@@ -35,18 +36,18 @@ bool GameModel::horizontalWin()
 
 bool GameModel::verticalWin()
 {
-    for(int j = 0; j != SIDE_SIZE; ++j)
+    for(int j = 0; j != m_sideSize; ++j)
     {
-        int currentCell = m_cells[0][j];
+        int currentCell = m_field[0][j];
         int count = 0;
-        for(int i = 0; i != SIDE_SIZE; ++i)
+        for(int i = 0; i != m_sideSize; ++i)
         {
-            if(currentCell != m_cells[i][j] || currentCell == 0)
+            if(currentCell != m_field[i][j] || currentCell == 0)
                 break;
             ++count;
         }
 
-        if(count == SIDE_SIZE)
+        if(count == m_sideSize)
             return true;
     }
     return false;
@@ -55,20 +56,20 @@ bool GameModel::verticalWin()
 bool GameModel::diagonalWin()
 {
     int firstCount = 0, secondCount = 0;
-    int currentFirstCell = m_cells[0][0];
-    int currentSecondCell = m_cells[0][SIDE_SIZE - 1];
-    for(int i = 0; i != SIDE_SIZE; ++i)
+    int currentFirstCell = m_field[0][0];
+    int currentSecondCell = m_field[0][m_sideSize - 1];
+    for(int i = 0; i != m_sideSize; ++i)
     {
-        if(currentFirstCell == m_cells[i][i] && currentFirstCell != 0)
+        if(currentFirstCell == m_field[i][i] && currentFirstCell != 0)
             firstCount++;
 
-        if(currentSecondCell == m_cells[i][SIDE_SIZE - 1 - i] && currentSecondCell != 0)
+        if(currentSecondCell == m_field[i][m_sideSize - 1 - i] && currentSecondCell != 0)
             secondCount++;
     }
 
-    if(firstCount == SIDE_SIZE)
+    if(firstCount == m_sideSize)
         return true;
-    else if(secondCount == SIDE_SIZE)
+    else if(secondCount == m_sideSize)
         return true;
 
     return false;
@@ -76,7 +77,7 @@ bool GameModel::diagonalWin()
 
 void GameModel::clearCells()
 {
-    std::fill(m_cells.begin(), m_cells.end(), std::vector<int>(SIDE_SIZE, EMPTY_CELL));
+    std::fill(m_field.begin(), m_field.end(), std::vector<int>(m_sideSize, EMPTY_CELL));
 }
 
 int GameModel::winner() const
@@ -86,7 +87,6 @@ int GameModel::winner() const
 
 void GameModel::setWinner(int winner)
 {  
-
     m_winner = winner;
     emit winnerChange();
 }
@@ -94,6 +94,24 @@ void GameModel::setWinner(int winner)
 bool GameModel::gameFinished() const
 {
     return m_gameFinished;
+}
+
+int GameModel::sideSize() const
+{
+    return m_sideSize;
+}
+
+void GameModel::setSideSize(int sideSize)
+{
+    m_sideSize = sideSize;
+    emit sideSizeChanged();
+
+    for(auto& row : m_field)
+    {
+        row.resize(m_sideSize);
+    }
+    m_field.resize(m_sideSize);
+    emit restartGame();
 }
 
 void GameModel::finishGame()
@@ -115,7 +133,7 @@ int GameModel::cell() const
 void GameModel::setCell(int cell)
 {
     m_currentCell = cell;
-    m_cells[m_currentCell / SIDE_SIZE][m_currentCell % SIDE_SIZE] = m_currentPlayer;
+    m_field[m_currentCell / m_sideSize][m_currentCell % m_sideSize] = m_currentPlayer;
     if(horizontalWin() || verticalWin() || diagonalWin())
     {
         finishGame();

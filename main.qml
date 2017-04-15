@@ -7,8 +7,8 @@ Window {
     id: mainWindow
 
     visible: true
-    width: 325
-    height: 325
+    width: 100 * gameModel.sideSize * 1.2
+    height: 100 * gameModel.sideSize * 1.2
 
     Loader {
         id: loader
@@ -39,6 +39,7 @@ Window {
     GameModel {
         id: gameModel
         currentPlayer: 1
+        sideSize: 4
 
         onWinnerChange: {
             dialog.textToShow = "Player " + gameModel.winner + " won this game!"

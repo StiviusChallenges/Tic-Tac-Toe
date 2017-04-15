@@ -7,12 +7,12 @@ Item {
     id: field
 
     Grid {
-        columns: 3
+        columns: gameModel.sideSize
         anchors.centerIn: parent
         anchors.margins: 8
         spacing: 1
         Repeater {
-            model: 9
+            model: gameModel.sideSize * gameModel.sideSize
             Cell {
                 width: 100; height: 100;
                 number: index

@@ -22,6 +22,14 @@ Item {
         }
 
         Button {
+            textButton: "Settings"
+            onButtonClicked:  {
+                pageChanged("Settings.qml");
+            }
+        }
+
+
+        Button {
             textButton: "Exit"
             onButtonClicked:  {
                 Qt.quit();

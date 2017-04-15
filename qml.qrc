@@ -9,5 +9,6 @@
         <file>MainMenu.qml</file>
         <file>Stats.qml</file>
         <file>DialogBox.qml</file>
+        <file>Settings.qml</file>
     </qresource>
 </RCC>
