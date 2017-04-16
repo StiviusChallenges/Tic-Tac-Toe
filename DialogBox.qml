@@ -31,7 +31,7 @@ Item {
                 font.pixelSize: 18
             }
 
-            Button {
+            CustomButton {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 10
@@ -39,9 +39,9 @@ Item {
                 width: parent.width/2.5
                 height: parent.height/3.5
 
-                textButton: "Close"
-                textFontSize: 16
-                onButtonClicked:  {
+                text: "Close"
+                font.pixelSize: 16
+                onClicked:  {
                     dialog.visible = false;
                     dialogClosed();
                 }

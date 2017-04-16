@@ -14,6 +14,7 @@ class GameModel : public QObject
     Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
     Q_PROPERTY(int sideSize READ sideSize WRITE setSideSize NOTIFY sideSizeChanged)
     Q_PROPERTY(int totalGames READ totalGames WRITE setTotalGames NOTIFY totalGamesChanged)
+    Q_PROPERTY(int winSequence READ winSequence WRITE setWinSequence)
     Q_PROPERTY(bool gameFinished READ gameFinished)
 
 signals:
@@ -52,6 +53,9 @@ public:
     int totalGames() const;
     void setTotalGames(int totalGames);
 
+    int winSequence() const;
+    void setWinSequence(int winSequence);
+
 private:
     enum ResultEnum {
         Draw,
@@ -63,7 +67,7 @@ private:
     bool horizontalWin();
     bool verticalWin();
     bool diagonalWin();
-    void clearCells();
+    void clearField();
 
 private:
     std::vector<std::vector<int>> m_field;
@@ -75,7 +79,7 @@ private:
     int m_sideSize = 3;
     int m_totalGames = 0;
     bool m_gameFinished = false;
-
+    int m_winSequence = 3;
 };
 
 

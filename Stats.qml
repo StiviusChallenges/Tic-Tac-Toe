@@ -27,12 +27,12 @@ Item {
             }
         }
 
-        Button {
-            textButton: "Go to menu"
+        CustomButton {
+            text: "Go to menu"
             width: 160
             height: 40
 
-            onButtonClicked: {
+            onClicked: {
                 pageChanged("MainMenu.qml")
             }
         }

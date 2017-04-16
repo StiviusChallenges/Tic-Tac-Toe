@@ -5,7 +5,7 @@
         <file>Field.qml</file>
         <file>Nought.qml</file>
         <file>Cross.qml</file>
-        <file>Button.qml</file>
+        <file>CustomButton.qml</file>
         <file>MainMenu.qml</file>
         <file>Stats.qml</file>
         <file>DialogBox.qml</file>

@@ -11,7 +11,7 @@ GameModel::GameModel(QObject *parent) :
         m_gameFinished = false;
         m_winner = 0;
         m_currentCell = -1;
-        clearCells();
+        clearField();
     });
 }
 
@@ -33,7 +33,7 @@ bool GameModel::horizontalWin()
             ++count;
         }
 
-        if(count == m_sideSize)
+        if(count == m_winSequence)
             return true;
     }
     return false;
@@ -52,7 +52,7 @@ bool GameModel::verticalWin()
             ++count;
         }
 
-        if(count == m_sideSize)
+        if(count == m_winSequence)
             return true;
     }
     return false;
@@ -72,15 +72,15 @@ bool GameModel::diagonalWin()
             secondCount++;
     }
 
-    if(firstCount == m_sideSize)
+    if(firstCount == m_winSequence)
         return true;
-    else if(secondCount == m_sideSize)
+    else if(secondCount == m_winSequence)
         return true;
 
     return false;
 }
 
-void GameModel::clearCells()
+void GameModel::clearField()
 {
     std::fill(m_field.begin(), m_field.end(), std::vector<int>(m_sideSize, EMPTY_CELL));
 }
@@ -128,6 +128,16 @@ void GameModel::setTotalGames(int totalGames)
 {
     m_totalGames = totalGames;
     emit totalGamesChanged();
+}
+
+int GameModel::winSequence() const
+{
+    return m_winSequence;
+}
+
+void GameModel::setWinSequence(int winSequence)
+{
+    m_winSequence = winSequence;
 }
 
 void GameModel::finishGame(ResultEnum result)

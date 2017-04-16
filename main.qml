@@ -15,7 +15,7 @@ Window {
         width: parent.width
         height: parent.height
 
-        source: "MainMenu.qml"
+        source: "Settings.qml"
     }
 
     Connections {
