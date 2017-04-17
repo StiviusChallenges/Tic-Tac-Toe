@@ -26,9 +26,9 @@ Item {
                 height: difficultySettings.height
                 onGameModeChanged: {
                     if(mode == 1)
-                        difficultySettings.visible = false
+                        difficultySettings.hide();
                     else
-                        difficultySettings.visible = true
+                        difficultySettings.show();
                 }
             }
 
@@ -42,8 +42,17 @@ Item {
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
 
-            FieldSizeSettings { }
-            WinSequenceSettings { }
+            FieldSizeSettings {
+                id: fieldSizeSettings
+
+                onCurrentSideSizeChanged: {
+                    winSequenceSettings.modelUpdated(currentSideSize);
+                }
+            }
+
+            WinSequenceSettings {
+                id: winSequenceSettings
+            }
         }
 
         CustomButton {
@@ -55,6 +64,7 @@ Item {
             font.pixelSize: 16
 
             onClicked:  {
+//                console.log(fieldSizeSettings.currentSideSize, winSequenceSettings.winSequence)
                 pageChanged("Pages/MainMenu.qml")
             }
         }

@@ -50,6 +50,14 @@ Item {
     }
 
     onShowDialog: {
+        if(gameModel.winner)
+        {
+            textToShow = "Player " + gameModel.winner + " won this game!"
+        }
+        else
+        {
+            textToShow = "Draw! Nobody won this game."
+        }
         visible = true
     }
 }

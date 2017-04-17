@@ -44,6 +44,7 @@ ComboBox {
         }
 
         background: Rectangle {
+            opacity: 0.95
             border.color: "black"
             border.width: 2
             radius: 5

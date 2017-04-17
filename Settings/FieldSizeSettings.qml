@@ -3,6 +3,8 @@ import QtQuick 2.0
 import "../Components"
 
 Column {
+    property int currentSideSize: fieldSizeBox.currentIndex + 3
+
     Text {
         id: fieldSizeLabel
         text: qsTr("Field size")

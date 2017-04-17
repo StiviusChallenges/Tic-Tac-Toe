@@ -4,6 +4,9 @@ import QtQuick.Controls 2.1
 import "../Components"
 
 CustomGroupBox {
+    signal hide
+    signal show
+
     title: qsTr("Difficulty")
 
     Column {
@@ -22,6 +25,14 @@ CustomGroupBox {
             text: "Hard"
             font.pixelSize: 16
         }
+    }
+
+    onShow: {
+        visible = true
+    }
+
+    onHide: {
+        visible = false
     }
 }
 
