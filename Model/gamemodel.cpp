@@ -24,36 +24,42 @@ bool GameModel::horizontalWin()
 {
     for(int i = 0; i != m_sideSize; ++i)
     {
-        int currentCell = m_field[i][0];
-        int count = 0;
-        for(int j = 0; j != m_sideSize; ++j)
+        int equations = 0;
+        for(int j = 0; j != m_sideSize - 1; ++j)
         {
-            if(currentCell != m_field[i][j] || currentCell == 0)
-                break;
-            ++count;
+            if(m_field[i][j] == m_field[i][j + 1] && m_field[i][j] != 0)
+            {
+                ++equations;
+                if(equations + 1 == m_winSequence)
+                    return true;
+            }
+            else
+            {
+                equations = 0;
+            }
         }
-
-        if(count == m_winSequence)
-            return true;
     }
     return false;
 }
 
 bool GameModel::verticalWin()
 {
-    for(int j = 0; j != m_sideSize; ++j)
+    for(int i = 0; i != m_sideSize; ++i)
     {
-        int currentCell = m_field[0][j];
-        int count = 0;
-        for(int i = 0; i != m_sideSize; ++i)
+        int equations = 0;
+        for(int j = 0; j != m_sideSize - 1; ++j)
         {
-            if(currentCell != m_field[i][j] || currentCell == 0)
-                break;
-            ++count;
+            if(m_field[j][i] == m_field[j + 1][i] && m_field[j][i] != 0)
+            {
+                ++equations;
+                if(equations + 1 == m_winSequence)
+                    return true;
+            }
+            else
+            {
+                equations = 0;
+            }
         }
-
-        if(count == m_winSequence)
-            return true;
     }
     return false;
 }

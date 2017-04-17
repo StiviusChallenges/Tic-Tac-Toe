@@ -3,6 +3,8 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.1
 import org.game.engine 1.0
 
+import "Components"
+
 Window {
     id: mainWindow
 
@@ -15,7 +17,7 @@ Window {
         width: parent.width
         height: parent.height
 
-        source: "Settings.qml"
+        source: "Pages/MainMenu.qml"
     }
 
     Connections {
@@ -31,7 +33,7 @@ Window {
         id: dialog
 
         onDialogClosed: {
-            loader.source = "MainMenu.qml"
+            loader.source = "Pages/MainMenu.qml"
             gameModel.restartGame();
         }
     }

@@ -1,5 +1,7 @@
 import QtQuick 2.0
 
+import "../Components"
+
 Item {
     signal pageChanged(string pageName)
 
@@ -13,7 +15,7 @@ Item {
             text: "New game"
             font.pixelSize: 24
             onClicked:  {
-                pageChanged("Field.qml");
+                pageChanged("Pages/Field.qml");
             }
         }
 
@@ -23,7 +25,7 @@ Item {
             text: "Stats"
             font.pixelSize: 24
             onClicked:  {
-                pageChanged("Stats.qml");
+                pageChanged("Pages/Stats.qml");
             }
         }
 
@@ -33,7 +35,7 @@ Item {
             text: "Settings"
             font.pixelSize: 24
             onClicked:  {
-                pageChanged("Settings.qml");
+                pageChanged("Pages/Settings.qml");
             }
         }
 

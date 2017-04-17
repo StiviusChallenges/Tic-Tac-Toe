@@ -1,14 +1,20 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Cell.qml</file>
-        <file>Field.qml</file>
-        <file>Nought.qml</file>
-        <file>Cross.qml</file>
-        <file>CustomButton.qml</file>
-        <file>MainMenu.qml</file>
-        <file>Stats.qml</file>
-        <file>DialogBox.qml</file>
-        <file>Settings.qml</file>
+        <file>Settings/WinSequenceSettings.qml</file>
+        <file>Settings/GameModeSettings.qml</file>
+        <file>Settings/FieldSizeSettings.qml</file>
+        <file>Settings/DifficultySettings.qml</file>
+        <file>Pages/Stats.qml</file>
+        <file>Pages/MainMenu.qml</file>
+        <file>Pages/Field.qml</file>
+        <file>GameComponents/Nought.qml</file>
+        <file>GameComponents/Cross.qml</file>
+        <file>GameComponents/Cell.qml</file>
+        <file>Components/DialogBox.qml</file>
+        <file>Components/CustomGroupBox.qml</file>
+        <file>Components/CustomComboBox.qml</file>
+        <file>Components/CustomButton.qml</file>
+        <file>Pages/Settings.qml</file>
     </qresource>
 </RCC>

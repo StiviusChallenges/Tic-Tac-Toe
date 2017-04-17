@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "gamemodel.hpp"
+#include "Model/gamemodel.hpp"
 
 int main(int argc, char *argv[])
 {

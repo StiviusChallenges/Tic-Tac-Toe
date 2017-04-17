@@ -1,5 +1,7 @@
 import QtQuick 2.0
 
+import "../Components"
+
 Item {
     signal pageChanged(string pageName)
 
@@ -33,7 +35,7 @@ Item {
             height: 40
 
             onClicked: {
-                pageChanged("MainMenu.qml")
+                pageChanged("Pages/MainMenu.qml")
             }
         }
     }
