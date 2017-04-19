@@ -9,106 +9,62 @@ GameModel::GameModel(QObject *parent) :
 {
     connect(this, &GameModel::restartGame, this, [=](){
         m_gameFinished = false;
-        m_winner = 0;
-        m_currentCell = -1;
+        m_winner = NO_WINNER;
+        m_currentCell = INVALID_INDEX;
         clearField();
     });
 }
 
 void GameModel::changeTurn()
 {
-    m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+    m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
 }
 
-bool GameModel::horizontalWin()
+bool GameModel::isEqualToNextCell(CheckingType type, int column, int row)
 {
-    for(int i = 0; i != m_sideSize; ++i)
+    switch (type)
     {
-        int equations = 0;
-        for(int j = 0; j != m_sideSize - 1; ++j)
+    case Horizontal:
+        if(m_field[column][row] == m_field[column][row + 1] && m_field[column][row] != 0)
         {
-            if(m_field[i][j] == m_field[i][j + 1] && m_field[i][j] != 0)
-            {
-                ++equations;
-                if(equations + 1 == m_winSequence)
-                    return true;
-            }
-            else
-            {
-                equations = 0;
-            }
+            return true;
         }
+        break;
+    case Vertical:
+        if(m_field[row][column] == m_field[row + 1][column] && m_field[row][column] != 0)
+        {
+            return true;
+        }
+        break;
+    case MainDiagonal:
+        if(m_field[column][row] == m_field[column + 1][row + 1] && m_field[column][row] != 0)
+        {
+            return true;
+        }
+        break;
+    case SecondaryDiagonal:
+        if(m_field[column][row] == m_field[column + 1][row - 1] && m_field[column][row] != 0)
+        {
+            return true;
+        }
+        break;
     }
     return false;
 }
 
-bool GameModel::verticalWin()
+bool GameModel::horizontalOrVerticalWin()
 {
-    for(int i = 0; i != m_sideSize; ++i)
+    for(int column = 0; column != m_sideSize; ++column)
     {
-        int equations = 0;
-        for(int j = 0; j != m_sideSize - 1; ++j)
+        int horizontalMatch = 0, verticalMatch = 0;
+        for(int row = 0; row != m_sideSize - 1; ++row)
         {
-            if(m_field[j][i] == m_field[j + 1][i] && m_field[j][i] != 0)
-            {
-                ++equations;
-                if(equations + 1 == m_winSequence)
-                    return true;
-            }
-            else
-            {
-                equations = 0;
-            }
+            horizontalMatch = isEqualToNextCell(Horizontal, column, row) ? horizontalMatch + 1 : 0;
+            verticalMatch = isEqualToNextCell(Vertical, column, row) ? verticalMatch + 1 : 0;
+
+            if(horizontalMatch + 1 == m_winSequence || verticalMatch + 1 == m_winSequence)
+                return true;
         }
-    }
-    return false;
-}
-
-bool GameModel::isEqualToNextCell(Diagonal diagonal, int column, int row)
-{
-    if(diagonal == Main)
-    {
-        if(m_field[column][row] == m_field[column + 1][row + 1]
-                && m_field[column][row] != 0)
-        {
-            return true;
-        }
-    }
-    else
-    {
-        if(m_field[column][row] == m_field[column + 1][row - 1]
-                && m_field[column][row] != 0)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool GameModel::mainDiagonalWin(int currentIndex)
-{
-    int belowMainDigonal = 0, aboveMainDiagonal = 0;
-    for(int column = currentIndex, row = 0; column != m_sideSize - 1; ++row, ++column)
-    {
-        belowMainDigonal = isEqualToNextCell(Main, column, row) ? belowMainDigonal + 1 : 0;
-        aboveMainDiagonal = isEqualToNextCell(Main, row, column) ? aboveMainDiagonal + 1 : 0;
-
-        if(belowMainDigonal + 1 == m_winSequence || aboveMainDiagonal + 1 == m_winSequence)
-            return true;
-    }
-    return false;
-}
-
-bool GameModel::secondaryDiagonalWin(int currentIndex)
-{
-    int belowSecondDigonal = 0, aboveSecondDiagonal = 0;
-    for(int column = currentIndex, row = m_sideSize - 1; column != m_sideSize - 1; --row, ++column)
-    {
-        belowSecondDigonal = isEqualToNextCell(Secondary, column, row) ? belowSecondDigonal + 1 : 0;
-        aboveSecondDiagonal = isEqualToNextCell(Secondary, m_sideSize - 1 - row, m_sideSize - 1 - column) ? aboveSecondDiagonal + 1 : 0;
-
-        if(belowSecondDigonal + 1 == m_winSequence || aboveSecondDiagonal + 1 == m_winSequence)
-            return true;
     }
     return false;
 }
@@ -126,9 +82,59 @@ bool GameModel::diagonalWin()
     return false;
 }
 
+bool GameModel::mainDiagonalWin(int currentIndex)
+{
+    int belowMainDigonal = 0, aboveMainDiagonal = 0;
+    for(int column = currentIndex, row = 0; column != m_sideSize - 1; ++row, ++column)
+    {
+        belowMainDigonal = isEqualToNextCell(MainDiagonal, column, row) ? belowMainDigonal + 1 : 0;
+        aboveMainDiagonal = isEqualToNextCell(MainDiagonal, row, column) ? aboveMainDiagonal + 1 : 0;
+
+        if(belowMainDigonal + 1 == m_winSequence || aboveMainDiagonal + 1 == m_winSequence)
+            return true;
+    }
+    return false;
+}
+
+bool GameModel::secondaryDiagonalWin(int currentIndex)
+{
+    int belowSecondDigonal = 0, aboveSecondDiagonal = 0;
+    for(int column = currentIndex, row = m_sideSize - 1; column != m_sideSize - 1; --row, ++column)
+    {
+        belowSecondDigonal = isEqualToNextCell(SecondaryDiagonal, column, row) ? belowSecondDigonal + 1 : 0;
+        aboveSecondDiagonal = isEqualToNextCell(SecondaryDiagonal, m_sideSize - 1 - row, m_sideSize - 1 - column) ? aboveSecondDiagonal + 1 : 0;
+
+        if(belowSecondDigonal + 1 == m_winSequence || aboveSecondDiagonal + 1 == m_winSequence)
+            return true;
+    }
+    return false;
+}
+
+
 void GameModel::clearField()
 {
     std::fill(m_field.begin(), m_field.end(), std::vector<int>(m_sideSize, EMPTY_CELL));
+}
+
+void GameModel::finishGame(Result result)
+{
+    switch(result)
+    {
+    case Winner1st:
+        setScore1(m_score1 + 1);
+        setWinner(m_currentPlayer);
+        break;
+    case Winner2nd:
+        setScore2(m_score2 + 1);
+        setWinner(m_currentPlayer);
+        break;
+    default:
+        setWinner(NO_WINNER);
+        break;
+    }
+
+    setTotalGames(m_totalGames + 1);
+    m_gameFinished = true;
 }
 
 int GameModel::winner() const
@@ -186,27 +192,6 @@ void GameModel::setWinSequence(int winSequence)
     m_winSequence = winSequence;
 }
 
-void GameModel::finishGame(ResultEnum result)
-{
-    switch(result)
-    {
-    case Winner1st:
-        setScore1(m_score1 + 1);
-        setWinner(m_currentPlayer);
-        break;
-    case Winner2nd:
-        setScore2(m_score2 + 1);
-        setWinner(m_currentPlayer);
-        break;
-    default:
-        setWinner(0);
-        break;
-    }
-
-    setTotalGames(m_totalGames + 1);
-    m_gameFinished = true;
-}
-
 int GameModel::cell() const
 {
     return m_currentCell;
@@ -216,9 +201,9 @@ void GameModel::setCell(int cell)
 {
     m_currentCell = cell;
     m_field[m_currentCell / m_sideSize][m_currentCell % m_sideSize] = m_currentPlayer;
-    if(horizontalWin() || verticalWin() || diagonalWin())
+    if(horizontalOrVerticalWin() || diagonalWin())
     {
-        ResultEnum result = static_cast<ResultEnum>(m_currentPlayer);
+        Result result = static_cast<Result>(m_currentPlayer);
         finishGame(result);
     }
     else

@@ -2,7 +2,11 @@
 #define GAMEMODEL_HPP
 
 #include <QObject>
-#include <QVector>
+
+const int NO_WINNER = 0;
+const int PLAYER_1 = 1;
+const int PLAYER_2 = 2;
+const int INVALID_INDEX = -1;
 
 class GameModel : public QObject
 {
@@ -57,33 +61,35 @@ public:
     void setWinSequence(int winSequence);
 
 private:
-    enum ResultEnum {
+    enum Result {
         Draw,
         Winner1st,
         Winner2nd
     };
 
-    enum Diagonal {
-        Main,
-        Secondary
+    enum CheckingType {
+        Horizontal,
+        Vertical,
+        MainDiagonal,
+        SecondaryDiagonal
     };
 
-    void finishGame(ResultEnum result);
-    bool horizontalWin();
-    bool verticalWin();
+    bool isEqualToNextCell(CheckingType type, int column, int row);
+    bool horizontalOrVerticalWin();
     bool diagonalWin();
-    void clearField();
-    bool isEqualToNextCell(Diagonal diagonal, int column, int row);
     bool mainDiagonalWin(int currentIndex);
     bool secondaryDiagonalWin(int currentIndex);
 
+    void finishGame(Result result);
+    void clearField();
+
 private:
     std::vector<std::vector<int>> m_field;
-    int m_winner = 0;
-    int m_currentCell = -1;
+    int m_winner = NO_WINNER;
+    int m_currentCell = INVALID_INDEX;
     int m_score1 = 0;
     int m_score2 = 0;
-    int m_currentPlayer = 1;
+    int m_currentPlayer = PLAYER_1;
     int m_sideSize = 3;
     int m_totalGames = 0;
     bool m_gameFinished = false;
