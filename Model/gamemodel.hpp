@@ -7,7 +7,7 @@
 const int NO_WINNER = 0;
 const int PLAYER_1 = 1;
 const int PLAYER_2 = 2;
-const int INVALID_INDEX = -1;
+const int INVALID_CELL = -1;
 
 class GameModel : public QObject
 {
@@ -39,20 +39,20 @@ public:
     int score2() const;
     void setScore2(int);
 
+    int totalGames() const;
+    void setTotalGames(int totalGames);
+
     int cell() const;
     void setCell(int);
 
     int winner() const;
     void setWinner(int);
 
-    bool gameFinished() const;
-    int currentPlayer() const;
-
-    int totalGames() const;
-    void setTotalGames(int totalGames);
-
     int winSequence() const;
     void setWinSequence(int winSequence);
+
+    bool gameFinished() const;
+    int currentPlayer() const;
 
 private:
     enum Result {
@@ -79,14 +79,14 @@ private:
     void resizeField(size_t sideSize);
 
 private:
-    int m_winSequence = 3;
+    int m_winSequence = DEFAUT_WIN_SEQUENCE;
     std::vector<std::vector<int>> m_field;
     QSettings _stats;
     int m_winner = NO_WINNER;
-    int m_currentCell = INVALID_INDEX;
-    int m_score1 = 0;
-    int m_score2 = 0;
-    int m_totalGames = 0;
+    int m_currentCell = INVALID_CELL;
+    int m_score1;
+    int m_score2;
+    int m_totalGames;
     int m_currentPlayer = PLAYER_1;
     bool m_gameFinished = false;
 

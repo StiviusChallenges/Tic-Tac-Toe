@@ -4,6 +4,8 @@
 #include <QCoreApplication>
 
 const int EMPTY_CELL = 0;
+const int DEFAULT_SCORE = 0;
+const int DEFAULT_TOTAL_GAMES = 0;
 
 GameModel::GameModel(QObject *parent) :
     QObject(parent),
@@ -12,14 +14,14 @@ GameModel::GameModel(QObject *parent) :
     connect(this, &GameModel::startGame, this, [=](int sideSize){
         m_gameFinished = false;
         m_winner = NO_WINNER;
-        m_currentCell = INVALID_INDEX;
+        m_currentCell = INVALID_CELL;
         resizeField(sideSize);
         clearField();
     });
 
-    m_score1 = _stats.value("Score1", 0).toInt();
-    m_score2 = _stats.value("Score2", 0).toInt();
-    m_totalGames = _stats.value("TotalGames", 0).toInt();
+    m_score1 = _stats.value("Score1", DEFAULT_SCORE).toInt();
+    m_score2 = _stats.value("Score2", DEFAULT_SCORE).toInt();
+    m_totalGames = _stats.value("TotalGames", DEFAULT_TOTAL_GAMES).toInt();
 }
 
 void GameModel::changeTurn()
@@ -154,23 +156,6 @@ void GameModel::setWinner(int winner)
     emit winnerChange();
 }
 
-bool GameModel::gameFinished() const
-{
-    return m_gameFinished;
-}
-
-void GameModel::resizeField(size_t sideSize)
-{
-    if(sideSize != m_field.size())
-    {
-        for(auto& row : m_field)
-        {
-            row.resize(sideSize);
-        }
-        m_field.resize(sideSize);
-    }
-}
-
 int GameModel::winSequence() const
 {
     return m_winSequence;
@@ -207,11 +192,6 @@ void GameModel::setCell(int cell)
     }
 }
 
-int GameModel::currentPlayer() const
-{
-    return m_currentPlayer;
-}
-
 int GameModel::score1() const
 {
     return m_score1;
@@ -246,4 +226,26 @@ void GameModel::setTotalGames(int totalGames)
     m_totalGames = totalGames;
     _stats.setValue("TotalGames", totalGames);
     emit totalGamesChanged();
+}
+
+int GameModel::currentPlayer() const
+{
+    return m_currentPlayer;
+}
+
+bool GameModel::gameFinished() const
+{
+    return m_gameFinished;
+}
+
+void GameModel::resizeField(size_t sideSize)
+{
+    if(sideSize != m_field.size())
+    {
+        for(auto& row : m_field)
+        {
+            row.resize(sideSize);
+        }
+        m_field.resize(sideSize);
+    }
 }

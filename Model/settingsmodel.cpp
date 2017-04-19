@@ -7,10 +7,10 @@ SettingsModel::SettingsModel(QObject *parent) :
     QObject(parent),
     _settings(qApp->applicationDirPath() + "/settings.ini", QSettings::IniFormat)
 {
-    m_sideSize = _settings.value("SideSize", 3).toInt();
-    m_winSequence = _settings.value("WinSequence", 3).toInt();
-    m_gameMode = _settings.value("GameMode", 1).toInt();
-    m_difficulty = _settings.value("Difficulty", 1).toInt();
+    m_sideSize = _settings.value("SideSize", DEFAULT_SIDE_SIZE).toInt();
+    m_winSequence = _settings.value("WinSequence", DEFAUT_WIN_SEQUENCE).toInt();
+    m_gameMode = _settings.value("GameMode", DEFAULT_GAME_MODE).toInt();
+    m_difficulty = _settings.value("Difficulty", DEFAULT_DIFFICULTY).toInt();
 }
 
 void SettingsModel::saveSettings()

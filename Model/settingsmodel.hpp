@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QSettings>
 
+const int DEFAULT_SIDE_SIZE = 3;
+const int DEFAUT_WIN_SEQUENCE = 3;
+const int DEFAULT_GAME_MODE = 1;
+const int DEFAULT_DIFFICULTY = 1;
+
 class SettingsModel : public QObject
 {
     Q_OBJECT
