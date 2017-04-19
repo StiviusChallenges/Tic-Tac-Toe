@@ -15,11 +15,11 @@ Item {
         spacing: 5
 
         Grid {
-            columns: gameModel.sideSize
+            columns: settings.sideSize
             anchors.margins: 8
             spacing: 1
             Repeater {
-                model: gameModel.sideSize * gameModel.sideSize
+                model: settings.sideSize * settings.sideSize
                 Cell {
                     width: 100; height: 100;
                     number: index

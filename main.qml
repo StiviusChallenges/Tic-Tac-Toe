@@ -10,8 +10,8 @@ Window {
     id: mainWindow
 
     visible: true
-    width: 100 * gameModel.sideSize * 1.2
-    height: 100 * gameModel.sideSize * 1.2
+    width: 100 * settings.sideSize * 1.2
+    height: 100 * settings.sideSize * 1.2
 
     Loader {
         id: loader
@@ -35,13 +35,11 @@ Window {
 
         onDialogClosed: {
             loader.source = "Pages/MainMenu.qml"
-            gameModel.restartGame();
         }
     }
 
     GameModel {
         id: gameModel
-        sideSize: settings.sideSize
         winSequence: settings.winSequence
 
         onWinnerChange: {

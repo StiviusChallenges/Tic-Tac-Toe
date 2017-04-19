@@ -12,31 +12,26 @@ const int INVALID_INDEX = -1;
 class GameModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int currentPlayer READ currentPlayer WRITE setCurrentPlayer)
     Q_PROPERTY(int score1 READ score1 WRITE setScore1 NOTIFY score1Change)
     Q_PROPERTY(int score2 READ score2 WRITE setScore2 NOTIFY score2Change)
-    Q_PROPERTY(int currentCell READ cell WRITE setCell)
-    Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
-    Q_PROPERTY(int sideSize READ sideSize WRITE setSideSize NOTIFY sideSizeChanged)
     Q_PROPERTY(int totalGames READ totalGames WRITE setTotalGames NOTIFY totalGamesChanged)
+    Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
+    Q_PROPERTY(int currentCell READ cell WRITE setCell)
+    Q_PROPERTY(int currentPlayer READ currentPlayer)
     Q_PROPERTY(int winSequence READ winSequence WRITE setWinSequence)
     Q_PROPERTY(bool gameFinished READ gameFinished)
 
 signals:
     void score1Change();
     void score2Change();
-    void winnerChange();
-    void restartGame();
-    void sideSizeChanged();
     void totalGamesChanged();
+    void winnerChange();
+    void startGame(int sideSize);
 
 public:
     explicit GameModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void changeTurn();
-
-    int currentPlayer() const;
-    void setCurrentPlayer(int);
 
     int score1() const;
     void setScore1(int);
@@ -51,9 +46,7 @@ public:
     void setWinner(int);
 
     bool gameFinished() const;
-
-    int sideSize() const;
-    void setSideSize(int sideSize);
+    int currentPlayer() const;
 
     int totalGames() const;
     void setTotalGames(int totalGames);
@@ -83,18 +76,18 @@ private:
 
     void finishGame(Result result);
     void clearField();
+    void resizeField(size_t sideSize);
 
 private:
     int m_winSequence = 3;
-    int m_sideSize = 3;
     std::vector<std::vector<int>> m_field;
     QSettings _stats;
     int m_winner = NO_WINNER;
     int m_currentCell = INVALID_INDEX;
     int m_score1 = 0;
     int m_score2 = 0;
-    int m_currentPlayer = PLAYER_1;
     int m_totalGames = 0;
+    int m_currentPlayer = PLAYER_1;
     bool m_gameFinished = false;
 
 };

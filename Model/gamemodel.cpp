@@ -7,13 +7,13 @@ const int EMPTY_CELL = 0;
 
 GameModel::GameModel(QObject *parent) :
     QObject(parent),
-    m_field(m_sideSize, std::vector<int>(m_sideSize, EMPTY_CELL)),
     _stats(qApp->applicationDirPath() + "/stats.ini", QSettings::IniFormat)
 {
-    connect(this, &GameModel::restartGame, this, [=](){
+    connect(this, &GameModel::startGame, this, [=](int sideSize){
         m_gameFinished = false;
         m_winner = NO_WINNER;
         m_currentCell = INVALID_INDEX;
+        resizeField(sideSize);
         clearField();
     });
 
@@ -61,10 +61,10 @@ bool GameModel::isEqualToNextCell(CheckingType type, int column, int row)
 
 bool GameModel::horizontalOrVerticalWin()
 {
-    for(int column = 0; column != m_sideSize; ++column)
+    for(size_t column = 0; column != m_field.size(); ++column)
     {
         int horizontalMatch = 0, verticalMatch = 0;
-        for(int row = 0; row != m_sideSize - 1; ++row)
+        for(size_t row = 0; row != m_field.size() - 1; ++row)
         {
             horizontalMatch = isEqualToNextCell(Horizontal, column, row) ? horizontalMatch + 1 : 0;
             verticalMatch = isEqualToNextCell(Vertical, column, row) ? verticalMatch + 1 : 0;
@@ -79,7 +79,7 @@ bool GameModel::horizontalOrVerticalWin()
 bool GameModel::diagonalWin()
 {
     // We shouldn't check 1 and 2 cells in a row because such sequence is not allowed
-    for(int index = 0; index != m_sideSize - 2; ++index)
+    for(size_t index = 0; index != m_field.size() - 2; ++index)
     {
         if(mainDiagonalWin(index) || secondaryDiagonalWin(index))
         {
@@ -92,7 +92,7 @@ bool GameModel::diagonalWin()
 bool GameModel::mainDiagonalWin(int currentIndex)
 {
     int belowMainDigonal = 0, aboveMainDiagonal = 0;
-    for(int column = currentIndex, row = 0; column != m_sideSize - 1; ++row, ++column)
+    for(size_t column = currentIndex, row = 0; column != m_field.size() - 1; ++row, ++column)
     {
         belowMainDigonal = isEqualToNextCell(MainDiagonal, column, row) ? belowMainDigonal + 1 : 0;
         aboveMainDiagonal = isEqualToNextCell(MainDiagonal, row, column) ? aboveMainDiagonal + 1 : 0;
@@ -106,10 +106,10 @@ bool GameModel::mainDiagonalWin(int currentIndex)
 bool GameModel::secondaryDiagonalWin(int currentIndex)
 {
     int belowSecondDigonal = 0, aboveSecondDiagonal = 0;
-    for(int column = currentIndex, row = m_sideSize - 1; column != m_sideSize - 1; --row, ++column)
+    for(size_t column = currentIndex, row = m_field.size() - 1; column != m_field.size() - 1; --row, ++column)
     {
         belowSecondDigonal = isEqualToNextCell(SecondaryDiagonal, column, row) ? belowSecondDigonal + 1 : 0;
-        aboveSecondDiagonal = isEqualToNextCell(SecondaryDiagonal, m_sideSize - 1 - row, m_sideSize - 1 - column) ? aboveSecondDiagonal + 1 : 0;
+        aboveSecondDiagonal = isEqualToNextCell(SecondaryDiagonal, m_field.size() - 1 - row, m_field.size() - 1 - column) ? aboveSecondDiagonal + 1 : 0;
 
         if(belowSecondDigonal + 1 == m_winSequence || aboveSecondDiagonal + 1 == m_winSequence)
             return true;
@@ -117,10 +117,9 @@ bool GameModel::secondaryDiagonalWin(int currentIndex)
     return false;
 }
 
-
 void GameModel::clearField()
 {
-    std::fill(m_field.begin(), m_field.end(), std::vector<int>(m_sideSize, EMPTY_CELL));
+    std::fill(m_field.begin(), m_field.end(), std::vector<int>(m_field.size(), EMPTY_CELL));
 }
 
 void GameModel::finishGame(Result result)
@@ -160,21 +159,16 @@ bool GameModel::gameFinished() const
     return m_gameFinished;
 }
 
-int GameModel::sideSize() const
+void GameModel::resizeField(size_t sideSize)
 {
-    return m_sideSize;
-}
-
-void GameModel::setSideSize(int sideSize)
-{
-    m_sideSize = sideSize;
-    for(auto& row : m_field)
+    if(sideSize != m_field.size())
     {
-        row.resize(m_sideSize);
+        for(auto& row : m_field)
+        {
+            row.resize(sideSize);
+        }
+        m_field.resize(sideSize);
     }
-    m_field.resize(m_sideSize);
-
-    emit sideSizeChanged();
 }
 
 int GameModel::winSequence() const
@@ -195,7 +189,7 @@ int GameModel::cell() const
 void GameModel::setCell(int cell)
 {
     m_currentCell = cell;
-    m_field[m_currentCell / m_sideSize][m_currentCell % m_sideSize] = m_currentPlayer;
+    m_field[m_currentCell / m_field.size()][m_currentCell % m_field.size()] = m_currentPlayer;
     if(horizontalOrVerticalWin() || diagonalWin())
     {
         Result result = static_cast<Result>(m_currentPlayer);
@@ -216,11 +210,6 @@ void GameModel::setCell(int cell)
 int GameModel::currentPlayer() const
 {
     return m_currentPlayer;
-}
-
-void GameModel::setCurrentPlayer(int currentPlayer)
-{
-    m_currentPlayer = currentPlayer;
 }
 
 int GameModel::score1() const

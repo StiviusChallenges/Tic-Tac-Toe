@@ -15,7 +15,7 @@ Item {
             text: "New game"
             font.pixelSize: 24
             onClicked:  {
-                gameModel.restartGame();
+                gameModel.startGame(settings.sideSize);
                 pageChanged("Pages/Field.qml");
             }
         }
