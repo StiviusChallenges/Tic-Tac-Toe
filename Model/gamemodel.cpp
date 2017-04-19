@@ -25,25 +25,25 @@ bool GameModel::isEqualToNextCell(CheckingType type, int column, int row)
     switch (type)
     {
     case Horizontal:
-        if(m_field[column][row] == m_field[column][row + 1] && m_field[column][row] != 0)
+        if(m_field[column][row] == m_field[column][row + 1] && m_field[column][row] != EMPTY_CELL)
         {
             return true;
         }
         break;
     case Vertical:
-        if(m_field[row][column] == m_field[row + 1][column] && m_field[row][column] != 0)
+        if(m_field[row][column] == m_field[row + 1][column] && m_field[row][column] != EMPTY_CELL)
         {
             return true;
         }
         break;
     case MainDiagonal:
-        if(m_field[column][row] == m_field[column + 1][row + 1] && m_field[column][row] != 0)
+        if(m_field[column][row] == m_field[column + 1][row + 1] && m_field[column][row] != EMPTY_CELL)
         {
             return true;
         }
         break;
     case SecondaryDiagonal:
-        if(m_field[column][row] == m_field[column + 1][row - 1] && m_field[column][row] != 0)
+        if(m_field[column][row] == m_field[column + 1][row - 1] && m_field[column][row] != EMPTY_CELL)
         {
             return true;
         }
