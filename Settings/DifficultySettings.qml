@@ -6,6 +6,7 @@ import "../Components"
 CustomGroupBox {
     signal hide
     signal show
+    property int difficulty: 1
 
     title: qsTr("Difficulty")
 
@@ -13,17 +14,37 @@ CustomGroupBox {
         RadioButton {
             text: "Easy"
             font.pixelSize: 16
-            checked: true
+            checked: (difficulty == 1) ? true : false
+
+            onCheckedChanged:  {
+                if(checked) {
+                    difficulty = 1
+                }
+            }
         }
 
         RadioButton {
             text: "Normal"
             font.pixelSize: 16
+            checked: (difficulty == 2) ? true : false
+
+            onCheckedChanged:  {
+                if(checked) {
+                    difficulty = 2
+                }
+            }
         }
 
         RadioButton {
             text: "Hard"
             font.pixelSize: 16
+            checked: (difficulty == 3) ? true : false
+
+            onCheckedChanged:  {
+                if(checked) {
+                    difficulty = 3
+                }
+            }
         }
     }
 

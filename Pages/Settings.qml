@@ -24,19 +24,33 @@ Item {
             GameModeSettings {
                 id: gameModeSettings
                 height: difficultySettings.height
-                onGameModeChanged: {
-                    if(mode == 1)
+                onModeChanged: {
+                    if(gameModeSettings.mode == 1)
+                    {
                         difficultySettings.hide();
+                    }
                     else
+                    {
                         difficultySettings.show();
+                    }
+                }
+
+                Component.onCompleted: {
+                    mode = settings.gameMode
                 }
             }
 
             DifficultySettings {
                 id: difficultySettings
-                visible: false
-            }
 
+                Component.onCompleted: {
+                    if(settings.gameMode == 1)
+                    {
+                        hide();
+                    }
+                    difficulty = settings.difficulty
+                }
+            }
         }
 
         Row {
@@ -45,13 +59,21 @@ Item {
             FieldSizeSettings {
                 id: fieldSizeSettings
 
-                onCurrentSideSizeChanged: {
-                    winSequenceSettings.modelUpdated(currentSideSize);
+                onSideSizeChanged: {
+                    winSequenceSettings.modelUpdated(sideSize);
+                }
+
+                Component.onCompleted: {
+                    sideSize = settings.sideSize
                 }
             }
 
             WinSequenceSettings {
                 id: winSequenceSettings
+
+                Component.onCompleted: {
+                    sequence = settings.winSequence
+                }
             }
         }
 
@@ -64,7 +86,11 @@ Item {
             font.pixelSize: 16
 
             onClicked:  {
-//                console.log(fieldSizeSettings.currentSideSize, winSequenceSettings.winSequence)
+                settings.sideSize = fieldSizeSettings.sideSize
+                settings.winSequence = winSequenceSettings.sequence
+                settings.gameMode = gameModeSettings.mode
+                settings.difficulty = difficultySettings.difficulty
+                settings.saveSettings();
                 pageChanged("Pages/MainMenu.qml")
             }
         }

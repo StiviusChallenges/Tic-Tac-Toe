@@ -1,11 +1,14 @@
 #include "gamemodel.hpp"
 
-#include <iostream>
+#include <QDebug>
+#include <QCoreApplication>
 
 const int EMPTY_CELL = 0;
 
 GameModel::GameModel(QObject *parent) :
-    QObject(parent), m_field(m_sideSize, std::vector<int>(m_sideSize, EMPTY_CELL))
+    QObject(parent),
+    m_field(m_sideSize, std::vector<int>(m_sideSize, EMPTY_CELL)),
+    _stats(qApp->applicationDirPath() + "/stats.ini", QSettings::IniFormat)
 {
     connect(this, &GameModel::restartGame, this, [=](){
         m_gameFinished = false;
@@ -13,6 +16,10 @@ GameModel::GameModel(QObject *parent) :
         m_currentCell = INVALID_INDEX;
         clearField();
     });
+
+    m_score1 = _stats.value("Score1", 0).toInt();
+    m_score2 = _stats.value("Score2", 0).toInt();
+    m_totalGames = _stats.value("TotalGames", 0).toInt();
 }
 
 void GameModel::changeTurn()
@@ -161,25 +168,13 @@ int GameModel::sideSize() const
 void GameModel::setSideSize(int sideSize)
 {
     m_sideSize = sideSize;
-    emit sideSizeChanged();
-
     for(auto& row : m_field)
     {
         row.resize(m_sideSize);
     }
     m_field.resize(m_sideSize);
-    emit restartGame();
-}
 
-int GameModel::totalGames() const
-{
-    return m_totalGames;
-}
-
-void GameModel::setTotalGames(int totalGames)
-{
-    m_totalGames = totalGames;
-    emit totalGamesChanged();
+    emit sideSizeChanged();
 }
 
 int GameModel::winSequence() const
@@ -236,6 +231,7 @@ int GameModel::score1() const
 void GameModel::setScore1(int player1Score)
 {
     m_score1 = player1Score;
+    _stats.setValue("Score1", player1Score);
     emit score1Change();
 }
 
@@ -247,5 +243,18 @@ int GameModel::score2() const
 void GameModel::setScore2(int player2Score)
 {
     m_score2 = player2Score;
+    _stats.setValue("Score2", player2Score);
     emit score2Change();
+}
+
+int GameModel::totalGames() const
+{
+    return m_totalGames;
+}
+
+void GameModel::setTotalGames(int totalGames)
+{
+    m_totalGames = totalGames;
+    _stats.setValue("TotalGames", totalGames);
+    emit totalGamesChanged();
 }

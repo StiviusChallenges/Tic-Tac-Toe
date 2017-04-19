@@ -4,7 +4,7 @@ import QtQuick.Controls 2.1
 import "../Components"
 
 CustomGroupBox {
-    signal gameModeChanged(int mode);
+    property int mode: 1
 
     title: qsTr("Game Mode")
 
@@ -15,19 +15,20 @@ CustomGroupBox {
         RadioButton {
             text: "2-players mode"
             font.pixelSize: 16
-            checked: true
+            checked: (mode == 1) ? true : false
 
             onClicked: {
-                gameModeChanged(1);
+                mode = 1
             }
         }
 
         RadioButton {
             text: "Computer mode"
             font.pixelSize: 16
+            checked: (mode == 2) ? true : false
 
             onClicked: {
-                gameModeChanged(2);
+                mode = 2
             }
         }
     }

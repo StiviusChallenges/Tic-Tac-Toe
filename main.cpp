@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "Model/gamemodel.hpp"
+#include "Model/settingsmodel.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +10,9 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    qmlRegisterType<GameModel>("org.game.engine", 1, 0, "GameModel"); // QML and C++ integration
+    qmlRegisterType<GameModel>("org.game.engine", 1, 0, "GameModel");
+    qmlRegisterType<SettingsModel>("org.settings.model", 1, 0, "SettingsModel");
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();

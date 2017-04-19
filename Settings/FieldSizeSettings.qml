@@ -3,7 +3,7 @@ import QtQuick 2.0
 import "../Components"
 
 Column {
-    property int currentSideSize: fieldSizeBox.currentIndex + 3
+    property int sideSize
 
     Text {
         id: fieldSizeLabel
@@ -13,8 +13,13 @@ Column {
 
     CustomComboBox {
         id: fieldSizeBox
+        currentIndex: sideSize - 3
         anchors.horizontalCenter: fieldSizeLabel.horizontalCenter
         width: 100
         model: ["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"]
+
+        onCurrentIndexChanged: {
+            sideSize = currentIndex + 3
+        }
     }
 }

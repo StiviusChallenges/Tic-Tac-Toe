@@ -2,6 +2,7 @@
 #define GAMEMODEL_HPP
 
 #include <QObject>
+#include "Model/settingsmodel.hpp"
 
 const int NO_WINNER = 0;
 const int PLAYER_1 = 1;
@@ -84,16 +85,17 @@ private:
     void clearField();
 
 private:
+    int m_winSequence = 3;
+    int m_sideSize = 3;
     std::vector<std::vector<int>> m_field;
+    QSettings _stats;
     int m_winner = NO_WINNER;
     int m_currentCell = INVALID_INDEX;
     int m_score1 = 0;
     int m_score2 = 0;
     int m_currentPlayer = PLAYER_1;
-    int m_sideSize = 3;
     int m_totalGames = 0;
     bool m_gameFinished = false;
-    int m_winSequence = 3;
 
 };
 

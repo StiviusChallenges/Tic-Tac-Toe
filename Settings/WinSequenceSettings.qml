@@ -4,7 +4,7 @@ import "../Components"
 
 Column {
     signal modelUpdated(int currentSideSize)
-    property int winSequence
+    property int sequence
 
     Text {
         id: winSequenceLabel
@@ -18,7 +18,7 @@ Column {
 
     CustomComboBox {
         id: winSequenceBox
-        currentIndex: 0
+        currentIndex: sequence - 3
         anchors.horizontalCenter: winSequenceLabel.horizontalCenter
         width: 100
         model: winSequenceModel
@@ -26,7 +26,7 @@ Column {
         onCurrentIndexChanged: {
             if(currentIndex != -1)
             {
-                winSequence = winSequenceModel.get(winSequenceBox.currentIndex).value
+                sequence = currentIndex + 3
             }
         }
     }
@@ -37,6 +37,9 @@ Column {
         {
             winSequenceModel.append({"value": i});
         }
-        winSequenceBox.currentIndex = 0
+        if(winSequenceBox.currentIndex == -1)
+        {
+            winSequenceBox.currentIndex = 0;
+        }
     }
 }
