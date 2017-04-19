@@ -41,7 +41,7 @@ Window {
     GameModel {
         id: gameModel
         currentPlayer: 1
-        sideSize: 3
+        sideSize: 4
 
         onWinnerChange: {
             dialog.showDialog();

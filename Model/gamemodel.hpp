@@ -63,11 +63,19 @@ private:
         Winner2nd
     };
 
+    enum Diagonal {
+        Main,
+        Secondary
+    };
+
     void finishGame(ResultEnum result);
     bool horizontalWin();
     bool verticalWin();
     bool diagonalWin();
     void clearField();
+    bool isEqualToNextCell(Diagonal diagonal, int column, int row);
+    bool mainDiagonalWin(int currentIndex);
+    bool secondaryDiagonalWin(int currentIndex);
 
 private:
     std::vector<std::vector<int>> m_field;
@@ -80,6 +88,7 @@ private:
     int m_totalGames = 0;
     bool m_gameFinished = false;
     int m_winSequence = 3;
+
 };
 
 

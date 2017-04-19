@@ -1,6 +1,6 @@
 #include "gamemodel.hpp"
 
-#include <QDebug>
+#include <iostream>
 
 const int EMPTY_CELL = 0;
 
@@ -64,25 +64,65 @@ bool GameModel::verticalWin()
     return false;
 }
 
+bool GameModel::isEqualToNextCell(Diagonal diagonal, int column, int row)
+{
+    if(diagonal == Main)
+    {
+        if(m_field[column][row] == m_field[column + 1][row + 1]
+                && m_field[column][row] != 0)
+        {
+            return true;
+        }
+    }
+    else
+    {
+        if(m_field[column][row] == m_field[column + 1][row - 1]
+                && m_field[column][row] != 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GameModel::mainDiagonalWin(int currentIndex)
+{
+    int belowMainDigonal = 0, aboveMainDiagonal = 0;
+    for(int column = currentIndex, row = 0; column != m_sideSize - 1; ++row, ++column)
+    {
+        belowMainDigonal = isEqualToNextCell(Main, column, row) ? belowMainDigonal + 1 : 0;
+        aboveMainDiagonal = isEqualToNextCell(Main, row, column) ? aboveMainDiagonal + 1 : 0;
+
+        if(belowMainDigonal + 1 == m_winSequence || aboveMainDiagonal + 1 == m_winSequence)
+            return true;
+    }
+    return false;
+}
+
+bool GameModel::secondaryDiagonalWin(int currentIndex)
+{
+    int belowSecondDigonal = 0, aboveSecondDiagonal = 0;
+    for(int column = currentIndex, row = m_sideSize - 1; column != m_sideSize - 1; --row, ++column)
+    {
+        belowSecondDigonal = isEqualToNextCell(Secondary, column, row) ? belowSecondDigonal + 1 : 0;
+        aboveSecondDiagonal = isEqualToNextCell(Secondary, m_sideSize - 1 - row, m_sideSize - 1 - column) ? aboveSecondDiagonal + 1 : 0;
+
+        if(belowSecondDigonal + 1 == m_winSequence || aboveSecondDiagonal + 1 == m_winSequence)
+            return true;
+    }
+    return false;
+}
+
 bool GameModel::diagonalWin()
 {
-    int firstCount = 0, secondCount = 0;
-    int currentFirstCell = m_field[0][0];
-    int currentSecondCell = m_field[0][m_sideSize - 1];
-    for(int i = 0; i != m_sideSize; ++i)
+    // We shouldn't check 1 and 2 cells in a row because such sequence is not allowed
+    for(int index = 0; index != m_sideSize - 2; ++index)
     {
-        if(currentFirstCell == m_field[i][i] && currentFirstCell != 0)
-            firstCount++;
-
-        if(currentSecondCell == m_field[i][m_sideSize - 1 - i] && currentSecondCell != 0)
-            secondCount++;
+        if(mainDiagonalWin(index) || secondaryDiagonalWin(index))
+        {
+            return true;
+        }
     }
-
-    if(firstCount == m_winSequence)
-        return true;
-    else if(secondCount == m_winSequence)
-        return true;
-
     return false;
 }
 

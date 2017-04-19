@@ -15,6 +15,7 @@ Item {
             text: "New game"
             font.pixelSize: 24
             onClicked:  {
+                gameModel.restartGame();
                 pageChanged("Pages/Field.qml");
             }
         }
