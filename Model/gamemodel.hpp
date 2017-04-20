@@ -32,6 +32,7 @@ public:
     explicit GameModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void changeTurn();
+    Q_INVOKABLE void clearStats();
 
     int score1() const;
     void setScore1(int);

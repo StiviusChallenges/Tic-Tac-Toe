@@ -13,6 +13,12 @@ Window {
     width: 100 * settings.sideSize * 1.2
     height: 100 * settings.sideSize * 1.2
 
+    Rectangle {
+        width: parent.width
+        height: parent.height
+        border.width: 2
+    }
+
     Loader {
         id: loader
         width: parent.width
@@ -43,6 +49,14 @@ Window {
         winSequence: settings.winSequence
 
         onWinnerChange: {
+            if(gameModel.winner)
+            {
+                dialog.textToShow = "Player " + gameModel.winner + " won this game!"
+            }
+            else
+            {
+                dialog.textToShow = "Draw! Nobody won this game."
+            }
             dialog.showDialog();
         }
     }

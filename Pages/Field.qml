@@ -5,7 +5,6 @@ import "../GameComponents"
 
 
 Item {
-    property int playerTurn: 0
     signal pageChanged(string pageName)
 
     id: field

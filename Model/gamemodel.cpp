@@ -4,8 +4,7 @@
 #include <QCoreApplication>
 
 const int EMPTY_CELL = 0;
-const int DEFAULT_SCORE = 0;
-const int DEFAULT_TOTAL_GAMES = 0;
+const int DEFAULT_VALUE = 0;
 
 GameModel::GameModel(QObject *parent) :
     QObject(parent),
@@ -19,9 +18,9 @@ GameModel::GameModel(QObject *parent) :
         clearField();
     });
 
-    m_score1 = _stats.value("Score1", DEFAULT_SCORE).toInt();
-    m_score2 = _stats.value("Score2", DEFAULT_SCORE).toInt();
-    m_totalGames = _stats.value("TotalGames", DEFAULT_TOTAL_GAMES).toInt();
+    m_score1 = _stats.value("Score1", DEFAULT_VALUE).toInt();
+    m_score2 = _stats.value("Score2", DEFAULT_VALUE).toInt();
+    m_totalGames = _stats.value("TotalGames", DEFAULT_VALUE).toInt();
 }
 
 void GameModel::changeTurn()
@@ -29,9 +28,17 @@ void GameModel::changeTurn()
     m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
 }
 
+void GameModel::clearStats()
+{
+    m_score1 = m_score2 = m_totalGames = 0;
+    _stats.setValue("Score1", DEFAULT_VALUE);
+    _stats.setValue("Score2", DEFAULT_VALUE);
+    _stats.setValue("TotalGames", DEFAULT_VALUE);
+}
+
 bool GameModel::isEqualToNextCell(CheckingType type, int column, int row)
 {
-    switch (type)
+    switch(type)
     {
     case Horizontal:
         if(m_field[column][row] == m_field[column][row + 1] && m_field[column][row] != EMPTY_CELL)

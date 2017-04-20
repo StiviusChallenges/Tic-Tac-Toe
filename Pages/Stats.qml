@@ -5,13 +5,23 @@ import "../Components"
 Item {
     signal pageChanged(string pageName)
 
+    function loadElements() {
+        statsModel.append({name: "Total games: ", value: gameModel.totalGames});
+        statsModel.append({name: "Player 1 scores: ", value: gameModel.score1});
+        statsModel.append({name: "Player 2 scores: ", value: gameModel.score2});
+    }
+
     ListModel {
+        signal modelUpdated
         id: statsModel
 
         Component.onCompleted: {
-             append({name: "Total games: ", value: gameModel.totalGames});
-             append({name: "Player 1 scores: ", value: gameModel.score1});
-             append({name: "Player 2 scores: ", value: gameModel.score2});
+            loadElements();
+        }
+
+        onModelUpdated: {
+            clear();
+            loadElements();
         }
     }
 
@@ -29,16 +39,34 @@ Item {
             }
         }
 
-        CustomButton {
-            text: "Go to menu"
-            width: 160
-            height: 40
+        Row {
+            spacing: 10
+            CustomButton {
+                text: "Clear stats"
+                width: 125
+                height: 35
 
-            onClicked: {
-                pageChanged("Pages/MainMenu.qml")
+                onClicked: {
+                    gameModel.clearStats();
+                    statsModel.modelUpdated();
+                    message.showDialog();
+                }
+            }
+
+            CustomButton {
+                text: "Go to menu"
+                width: 125
+                height: 35
+
+                onClicked: {
+                    pageChanged("Pages/MainMenu.qml")
+                }
             }
         }
     }
 
-
+    DialogBox {
+        id: message
+        textToShow: "Stats has been cleared."
+    }
 }
