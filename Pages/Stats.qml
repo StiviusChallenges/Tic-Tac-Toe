@@ -35,7 +35,7 @@ Item {
             delegate: Text {
                 text: name + value
                 color: "black"
-                font.pixelSize: 22
+                font.pixelSize: 36
             }
         }
 
@@ -43,8 +43,9 @@ Item {
             spacing: 10
             CustomButton {
                 text: "Clear stats"
-                width: 125
-                height: 35
+                width: 200
+                height: 60
+                font.pixelSize: 24
 
                 onClicked: {
                     gameModel.clearStats();
@@ -55,8 +56,9 @@ Item {
 
             CustomButton {
                 text: "Go to menu"
-                width: 125
-                height: 35
+                width: 200
+                height: 60
+                font.pixelSize: 24
 
                 onClicked: {
                     pageChanged("Pages/MainMenu.qml")

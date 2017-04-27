@@ -1,19 +1,21 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.3
+
 
 import "../Components"
 
 Item {
     signal pageChanged(string pageName)
 
-    Column {
+    ColumnLayout {
         spacing: 30
         anchors.centerIn: parent
 
         CustomButton {
-            width: 200
-            height: 60
+            width: 350
+            height: 80
             text: "New game"
-            font.pixelSize: 24
+            font.pixelSize: 36
             onClicked:  {
                 gameModel.startGame(settings.sideSize);
                 pageChanged("Pages/Field.qml");
@@ -21,20 +23,20 @@ Item {
         }
 
         CustomButton {
-            width: 200
-            height: 60
+            width: 350
+            height: 80
             text: "Stats"
-            font.pixelSize: 24
+            font.pixelSize: 36
             onClicked:  {
                 pageChanged("Pages/Stats.qml");
             }
         }
 
         CustomButton {
-            width: 200
-            height: 60
+            width: 350
+            height: 80
             text: "Settings"
-            font.pixelSize: 24
+            font.pixelSize: 36
             onClicked:  {
                 pageChanged("Pages/Settings.qml");
             }
@@ -42,10 +44,10 @@ Item {
 
 
         CustomButton {
-            width: 200
-            height: 60
+            width: 350
+            height: 80
             text: "Exit"
-            font.pixelSize: 24
+            font.pixelSize: 36
             onClicked:  {
                 Qt.quit();
             }

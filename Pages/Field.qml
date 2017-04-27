@@ -20,7 +20,7 @@ Item {
             Repeater {
                 model: settings.sideSize * settings.sideSize
                 Cell {
-                    width: 100; height: 100;
+                    width: 155; height: 155;
                     number: index
                 }
             }
@@ -29,9 +29,9 @@ Item {
         CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Back"
-            width: 100
-            height: 35
-            font.pixelSize: 16
+            width: 180
+            height: 50
+            font.pixelSize: 28
 
             onClicked: {
                 pageChanged("Pages/MainMenu.qml")

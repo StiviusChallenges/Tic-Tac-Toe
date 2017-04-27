@@ -10,8 +10,8 @@ Window {
     id: mainWindow
 
     visible: true
-    width: 100 * settings.sideSize * 1.2
-    height: 100 * settings.sideSize * 1.2
+    minimumWidth: 550;  minimumHeight: 550;
+    maximumWidth: 550;  maximumHeight: 550;
 
     Rectangle {
         width: parent.width

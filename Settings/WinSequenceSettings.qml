@@ -7,9 +7,9 @@ Column {
     property int sequence
 
     Text {
-        id: winSequenceLabel
+        anchors.horizontalCenter: parent.horizontalCenter
         text: qsTr("Win sequence")
-        font.pixelSize: 18
+        font.pixelSize: 20
     }
 
     ListModel {
@@ -19,8 +19,8 @@ Column {
     CustomComboBox {
         id: winSequenceBox
         currentIndex: sequence - 3
-        anchors.horizontalCenter: winSequenceLabel.horizontalCenter
-        width: 100
+        width: parent.width
+        font.pixelSize: 18
         model: winSequenceModel
 
         onCurrentIndexChanged: {

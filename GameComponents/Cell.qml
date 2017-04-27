@@ -8,8 +8,8 @@ Item {
 
     Rectangle {
         id: rect
-        width: 100
-        height: 100
+        width: parent.width
+        height: parent.height
         border.color: "black"
 
         MouseArea {

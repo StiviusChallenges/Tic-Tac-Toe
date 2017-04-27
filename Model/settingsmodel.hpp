@@ -6,16 +6,14 @@
 
 const int DEFAULT_SIDE_SIZE = 3;
 const int DEFAUT_WIN_SEQUENCE = 3;
-const int DEFAULT_GAME_MODE = 1;
-const int DEFAULT_DIFFICULTY = 1;
 
 class SettingsModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int sideSize READ sideSize WRITE setSideSize NOTIFY sideSizeChanged)
     Q_PROPERTY(int winSequence READ winSequence WRITE setWinSequence NOTIFY winSequenceChanged)
-    Q_PROPERTY(int gameMode READ gameMode WRITE setGameMode NOTIFY gameModeChanged)
-    Q_PROPERTY(int difficulty READ difficulty WRITE setDifficulty NOTIFY difficultyChanged)
+    Q_PROPERTY(GameMode gameMode READ gameMode WRITE setGameMode NOTIFY gameModeChanged)
+    Q_PROPERTY(Difficulty difficulty READ difficulty WRITE setDifficulty NOTIFY difficultyChanged)
 
 signals:
     void settingsUpdated();
@@ -25,6 +23,19 @@ signals:
     void difficultyChanged();
 
 public:
+    enum GameMode {
+        Computer = 1,
+        TwoPlayers
+    };
+    Q_ENUM(GameMode)
+
+    enum Difficulty {
+        Easy = 1,
+        Medium,
+        Hard
+    };
+    Q_ENUM(Difficulty)
+
     explicit SettingsModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void saveSettings();
@@ -35,17 +46,17 @@ public:
     int winSequence() const;
     void setWinSequence(int winSequence);
 
-    int gameMode() const;
-    void setGameMode(int gameMode);
+    GameMode gameMode() const;
+    void setGameMode(GameMode gameMode);
 
-    int difficulty() const;
-    void setDifficulty(int difficulty);
+    Difficulty difficulty() const;
+    void setDifficulty(Difficulty difficulty);
 
 private:
     int m_sideSize;
     int m_winSequence;
-    int m_gameMode;
-    int m_difficulty;
+    GameMode m_gameMode;
+    Difficulty m_difficulty;
     QSettings _settings;
 
 };

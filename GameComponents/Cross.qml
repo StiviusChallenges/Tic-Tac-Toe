@@ -5,7 +5,7 @@ Item {
     property color shapeColor: "black"
 
     Rectangle {
-        width: 80
+        width: 135
         height: 4
         rotation: 45
         color: shapeColor
@@ -13,7 +13,7 @@ Item {
     }
 
     Rectangle {
-        width: 80
+        width: 135
         height: 4
         rotation: 135
         color: shapeColor

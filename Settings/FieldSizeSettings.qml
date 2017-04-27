@@ -6,16 +6,16 @@ Column {
     property int sideSize
 
     Text {
-        id: fieldSizeLabel
+        anchors.horizontalCenter: parent.horizontalCenter
         text: qsTr("Field size")
-        font.pixelSize: 18
+        font.pixelSize: 20
     }
 
     CustomComboBox {
         id: fieldSizeBox
         currentIndex: sideSize - 3
-        anchors.horizontalCenter: fieldSizeLabel.horizontalCenter
-        width: 100
+        width: parent.width
+        font.pixelSize: 18
         model: ["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"]
 
         onCurrentIndexChanged: {

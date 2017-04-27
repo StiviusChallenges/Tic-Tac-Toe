@@ -3,14 +3,17 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+const int DEFAULT_GAME_MODE = SettingsModel::Computer;
+const int DEFAULT_DIFFICULTY = SettingsModel::Easy;
+
 SettingsModel::SettingsModel(QObject *parent) :
     QObject(parent),
     _settings(qApp->applicationDirPath() + "/settings.ini", QSettings::IniFormat)
 {
     m_sideSize = _settings.value("SideSize", DEFAULT_SIDE_SIZE).toInt();
     m_winSequence = _settings.value("WinSequence", DEFAUT_WIN_SEQUENCE).toInt();
-    m_gameMode = _settings.value("GameMode", DEFAULT_GAME_MODE).toInt();
-    m_difficulty = _settings.value("Difficulty", DEFAULT_DIFFICULTY).toInt();
+    m_gameMode = static_cast<GameMode>(_settings.value("GameMode", DEFAULT_GAME_MODE).toInt());
+    m_difficulty = static_cast<Difficulty>(_settings.value("Difficulty", DEFAULT_DIFFICULTY).toInt());
 }
 
 void SettingsModel::saveSettings()
@@ -45,23 +48,23 @@ void SettingsModel::setWinSequence(int winSequence)
     emit winSequenceChanged();
 }
 
-int SettingsModel::gameMode() const
+SettingsModel::GameMode SettingsModel::gameMode() const
 {
     return m_gameMode;
 }
 
-void SettingsModel::setGameMode(int gameMode)
+void SettingsModel::setGameMode(GameMode gameMode)
 {
     m_gameMode = gameMode;
     emit gameModeChanged();
 }
 
-int SettingsModel::difficulty() const
+SettingsModel::Difficulty SettingsModel::difficulty() const
 {
     return m_difficulty;
 }
 
-void SettingsModel::setDifficulty(int difficulty)
+void SettingsModel::setDifficulty(Difficulty difficulty)
 {
     m_difficulty = difficulty;
     emit difficultyChanged();

@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import org.settings.model 1.0
 
 import "../Settings"
 import "../Components"
@@ -8,24 +9,25 @@ Item {
     signal pageChanged(string pageName)
 
     Column {
-        spacing: 10
+        spacing: 20
         anchors.centerIn: parent
 
         Text {
             id: title
             text: qsTr("Settings")
-            font.pixelSize: 24
+            font.pixelSize: 36
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
         Row {
-            spacing: 10
+            spacing: 15
 
             GameModeSettings {
                 id: gameModeSettings
-                height: difficultySettings.height
+                width: 225
+                height: 250
                 onModeChanged: {
-                    if(gameModeSettings.mode == 1)
+                    if(gameModeSettings.mode == SettingsModel.TwoPlayers)
                     {
                         difficultySettings.hide();
                     }
@@ -42,9 +44,10 @@ Item {
 
             DifficultySettings {
                 id: difficultySettings
-
+                width: 225
+                height: 250
                 Component.onCompleted: {
-                    if(settings.gameMode == 1)
+                    if(settings.gameMode === SettingsModel.TwoPlayers)
                     {
                         hide();
                     }
@@ -54,9 +57,11 @@ Item {
         }
 
         Row {
+            spacing: 15
             anchors.horizontalCenter: parent.horizontalCenter
 
             FieldSizeSettings {
+                width: 225
                 id: fieldSizeSettings
 
                 onSideSizeChanged: {
@@ -69,6 +74,7 @@ Item {
             }
 
             WinSequenceSettings {
+                width: 225
                 id: winSequenceSettings
 
                 Component.onCompleted: {
@@ -80,10 +86,10 @@ Item {
         CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
 
-            width: 125
-            height: 35
+            width: 180
+            height: 50
             text: qsTr("Save")
-            font.pixelSize: 16
+            font.pixelSize: 26
 
             onClicked:  {
                 settings.sideSize = fieldSizeSettings.sideSize

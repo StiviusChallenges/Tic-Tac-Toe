@@ -5,8 +5,8 @@ Item {
     property color shapeColor: "black"
 
     Rectangle {
-        width: 70
-        height: 70
+        width: 115
+        height: 115
         radius: width * 0.5
         anchors.centerIn: parent
         border.color: shapeColor
