@@ -33,6 +33,7 @@ Item {
             model: statsModel
 
             delegate: Text {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: name + value
                 color: "black"
                 font.pixelSize: 36
