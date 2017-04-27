@@ -20,13 +20,14 @@ Item {
             Repeater {
                 model: settings.sideSize * settings.sideSize
                 Cell {
-                    width: 155; height: 155;
+                    width: 155 * 3/settings.sideSize; height: 155  * 3/settings.sideSize;
                     number: index
                 }
             }
         }
 
         CustomButton {
+            id: back
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Back"
             width: 180
