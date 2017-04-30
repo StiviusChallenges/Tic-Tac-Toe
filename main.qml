@@ -36,31 +36,6 @@ Window {
         }
     }
 
-    DialogBox {
-        id: dialog
-
-        onDialogClosed: {
-            loader.source = "Pages/MainMenu.qml"
-        }
-    }
-
-    GameModel {
-        id: gameModel
-        winSequence: settings.winSequence
-
-        onWinnerChange: {
-            if(gameModel.winner)
-            {
-                dialog.textToShow = "Player " + gameModel.winner + " won this game!"
-            }
-            else
-            {
-                dialog.textToShow = "Draw! Nobody won this game."
-            }
-            dialog.showDialog();
-        }
-    }
-
     SettingsModel {
         id: settings
     }

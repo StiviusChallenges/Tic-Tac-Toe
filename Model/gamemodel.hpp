@@ -7,7 +7,6 @@
 const int NO_WINNER = 0;
 const int PLAYER_1 = 1;
 const int PLAYER_2 = 2;
-const int INVALID_CELL = -1;
 
 class GameModel : public QObject
 {
@@ -16,9 +15,7 @@ class GameModel : public QObject
     Q_PROPERTY(int score2 READ score2 WRITE setScore2 NOTIFY score2Change)
     Q_PROPERTY(int totalGames READ totalGames WRITE setTotalGames NOTIFY totalGamesChanged)
     Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
-    Q_PROPERTY(int currentCell READ cell WRITE setCell)
     Q_PROPERTY(int currentPlayer READ currentPlayer)
-    Q_PROPERTY(int winSequence READ winSequence WRITE setWinSequence)
     Q_PROPERTY(bool gameFinished READ gameFinished)
 
 signals:
@@ -26,13 +23,15 @@ signals:
     void score2Change();
     void totalGamesChanged();
     void winnerChange();
-    void startGame(int sideSize);
+    void startGame(int sideSize, int gameMode, int difficulty, int winSequence);
+    void cellOccupied(int cell);
 
 public:
     explicit GameModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void changeTurn();
     Q_INVOKABLE void clearStats();
+    Q_INVOKABLE void setCellOccupied(int cel);
+    Q_INVOKABLE void changeTurn();
 
     int score1() const;
     void setScore1(int);
@@ -43,14 +42,8 @@ public:
     int totalGames() const;
     void setTotalGames(int totalGames);
 
-    int cell() const;
-    void setCell(int);
-
     int winner() const;
-    void setWinner(int);
-
-    int winSequence() const;
-    void setWinSequence(int winSequence);
+    void setWinner(int winner);
 
     bool gameFinished() const;
     int currentPlayer() const;
@@ -78,18 +71,21 @@ private:
     void finishGame(Result result);
     void clearField();
     void resizeField(size_t sideSize);
+    void checkGameState();
 
 private:
-    int m_winSequence = DEFAUT_WIN_SEQUENCE;
     std::vector<std::vector<int>> m_field;
     QSettings _stats;
     int m_winner = NO_WINNER;
-    int m_currentCell = INVALID_CELL;
     int m_score1;
     int m_score2;
     int m_totalGames;
     int m_currentPlayer = PLAYER_1;
     bool m_gameFinished = false;
+
+    int m_winSequence = DEFAUT_WIN_SEQUENCE;
+    int m_gameMode;
+    int m_difficulty;
 
 };
 

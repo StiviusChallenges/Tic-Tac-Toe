@@ -10,10 +10,13 @@ GameModel::GameModel(QObject *parent) :
     QObject(parent),
     _stats(qApp->applicationDirPath() + "/stats.ini", QSettings::IniFormat)
 {
-    connect(this, &GameModel::startGame, this, [=](int sideSize){
+    connect(this, &GameModel::startGame, this, [=](int sideSize, int gameMode,
+                                                   int difficulty, int winSequence){
         m_gameFinished = false;
+        m_gameMode = gameMode;
+        m_difficulty = difficulty;
+        m_winSequence = winSequence;
         m_winner = NO_WINNER;
-        m_currentCell = INVALID_CELL;
         resizeField(sideSize);
         clearField();
     });
@@ -26,6 +29,20 @@ GameModel::GameModel(QObject *parent) :
 void GameModel::changeTurn()
 {
     m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
+    if(m_currentPlayer == PLAYER_2 && m_gameMode == SettingsModel::Computer)
+    {
+        for(size_t row = 0; row != m_field.size(); ++row)
+        {
+            for(size_t column = 0; column != m_field.size(); ++column)
+            {
+                if(m_field[row][column] == EMPTY_CELL)
+                {
+                    setCellOccupied(row * m_field.size() + column);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void GameModel::clearStats()
@@ -163,25 +180,15 @@ void GameModel::setWinner(int winner)
     emit winnerChange();
 }
 
-int GameModel::winSequence() const
+void GameModel::setCellOccupied(int cell)
 {
-    return m_winSequence;
+    m_field[cell / m_field.size()][cell % m_field.size()] = m_currentPlayer;
+    checkGameState();
+    emit cellOccupied(cell);
 }
 
-void GameModel::setWinSequence(int winSequence)
+void GameModel::checkGameState()
 {
-    m_winSequence = winSequence;
-}
-
-int GameModel::cell() const
-{
-    return m_currentCell;
-}
-
-void GameModel::setCell(int cell)
-{
-    m_currentCell = cell;
-    m_field[m_currentCell / m_field.size()][m_currentCell % m_field.size()] = m_currentPlayer;
     if(horizontalOrVerticalWin() || diagonalWin())
     {
         Result result = static_cast<Result>(m_currentPlayer);

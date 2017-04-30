@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import org.game.engine 1.0
 
 Item {
     id: cell
@@ -18,10 +19,7 @@ Item {
 
             onClicked: {
                 if(!occupied && !gameModel.gameFinished) {
-                    cell.state = (gameModel.currentPlayer === 1) ? "cross" :"nought"
-                    occupied = true
-                    gameModel.currentCell = number
-                    gameModel.changeTurn();
+                    gameModel.setCellOccupied(number);
                 }
             }
 
@@ -62,12 +60,12 @@ Item {
         },
         State {
             name: "nought"
-            PropertyChanges { target: cell; shapeColor: (occupied) ? "black" : "darkgrey"; }
+            PropertyChanges { target: cell; shapeColor: occupied ? "black" : "darkgrey"; }
             PropertyChanges { target: dialLoader; source: "Nought.qml"; }
         },
         State {
             name: "cross"
-            PropertyChanges { target: cell; shapeColor: (occupied) ? "black" : "darkgrey"; }
+            PropertyChanges { target: cell; shapeColor: occupied ? "black" : "darkgrey"; }
             PropertyChanges { target: dialLoader; source: "Cross.qml"; }
         }
     ]

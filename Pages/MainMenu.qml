@@ -17,7 +17,6 @@ Item {
             text: "New game"
             font.pixelSize: 36
             onClicked:  {
-                gameModel.startGame(settings.sideSize);
                 pageChanged("Pages/Field.qml");
             }
         }
