@@ -5,7 +5,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     Model/gamemodel.cpp \
-    Model/settingsmodel.cpp
+    Model/settingsmodel.cpp \
+    Model/statsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Model/gamemodel.hpp \
-    Model/settingsmodel.hpp
+    Model/settingsmodel.hpp \
+    Model/statsmodel.hpp

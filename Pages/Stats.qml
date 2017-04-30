@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import org.stats.model 1.0
 
 import "../Components"
 
@@ -6,14 +7,14 @@ Item {
     signal pageChanged(string pageName)
 
     function loadElements() {
-        statsModel.append({name: "Total games: ", value: gameModel.totalGames});
-        statsModel.append({name: "Player 1 scores: ", value: gameModel.score1});
-        statsModel.append({name: "Player 2 scores: ", value: gameModel.score2});
+        listModel.append({name: "Total games: ", value: statsModel.totalGames});
+        listModel.append({name: "Player 1 scores: ", value: statsModel.score1});
+        listModel.append({name: "Player 2 scores: ", value: statsModel.score2});
     }
 
     ListModel {
         signal modelUpdated
-        id: statsModel
+        id: listModel
 
         Component.onCompleted: {
             loadElements();
@@ -30,7 +31,7 @@ Item {
         anchors.centerIn: parent
 
         Repeater {
-            model: statsModel
+            model: listModel
 
             delegate: Text {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -49,8 +50,8 @@ Item {
                 font.pixelSize: 24
 
                 onClicked: {
-                    gameModel.clearStats();
-                    statsModel.modelUpdated();
+                    statsModel.clearStats();
+                    listModel.modelUpdated();
                     message.showDialog();
                 }
             }
@@ -71,5 +72,9 @@ Item {
     DialogBox {
         id: message
         textToShow: "Stats has been cleared."
+    }
+
+    StatsModel {
+        id: statsModel
     }
 }

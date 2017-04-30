@@ -11,17 +11,11 @@ const int PLAYER_2 = 2;
 class GameModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int score1 READ score1 WRITE setScore1 NOTIFY score1Change)
-    Q_PROPERTY(int score2 READ score2 WRITE setScore2 NOTIFY score2Change)
-    Q_PROPERTY(int totalGames READ totalGames WRITE setTotalGames NOTIFY totalGamesChanged)
     Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
     Q_PROPERTY(int currentPlayer READ currentPlayer)
     Q_PROPERTY(bool gameFinished READ gameFinished)
 
 signals:
-    void score1Change();
-    void score2Change();
-    void totalGamesChanged();
     void winnerChange();
     void startGame(int sideSize, int gameMode, int difficulty, int winSequence);
     void cellOccupied(int cell);
@@ -29,18 +23,8 @@ signals:
 public:
     explicit GameModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void clearStats();
     Q_INVOKABLE void setCellOccupied(int cel);
     Q_INVOKABLE void changeTurn();
-
-    int score1() const;
-    void setScore1(int);
-
-    int score2() const;
-    void setScore2(int);
-
-    int totalGames() const;
-    void setTotalGames(int totalGames);
 
     int winner() const;
     void setWinner(int winner);
@@ -75,11 +59,7 @@ private:
 
 private:
     std::vector<std::vector<int>> m_field;
-    QSettings _stats;
     int m_winner = NO_WINNER;
-    int m_score1;
-    int m_score2;
-    int m_totalGames;
     int m_currentPlayer = PLAYER_1;
     bool m_gameFinished = false;
 

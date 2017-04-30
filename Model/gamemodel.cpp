@@ -3,12 +3,12 @@
 #include <QDebug>
 #include <QCoreApplication>
 
-const int EMPTY_CELL = 0;
-const int DEFAULT_VALUE = 0;
+#include "Model/statsmodel.hpp"
 
-GameModel::GameModel(QObject *parent) :
-    QObject(parent),
-    _stats(qApp->applicationDirPath() + "/stats.ini", QSettings::IniFormat)
+const int EMPTY_CELL = 0;
+
+GameModel::GameModel(QObject* parent) :
+    QObject(parent)
 {
     connect(this, &GameModel::startGame, this, [=](int sideSize, int gameMode,
                                                    int difficulty, int winSequence){
@@ -21,9 +21,6 @@ GameModel::GameModel(QObject *parent) :
         clearField();
     });
 
-    m_score1 = _stats.value("Score1", DEFAULT_VALUE).toInt();
-    m_score2 = _stats.value("Score2", DEFAULT_VALUE).toInt();
-    m_totalGames = _stats.value("TotalGames", DEFAULT_VALUE).toInt();
 }
 
 void GameModel::changeTurn()
@@ -43,14 +40,6 @@ void GameModel::changeTurn()
             }
         }
     }
-}
-
-void GameModel::clearStats()
-{
-    m_score1 = m_score2 = m_totalGames = 0;
-    _stats.setValue("Score1", DEFAULT_VALUE);
-    _stats.setValue("Score2", DEFAULT_VALUE);
-    _stats.setValue("TotalGames", DEFAULT_VALUE);
 }
 
 bool GameModel::isEqualToNextCell(CheckingType type, int column, int row)
@@ -153,19 +142,15 @@ void GameModel::finishGame(Result result)
     switch(result)
     {
     case Winner1st:
-        setScore1(m_score1 + 1);
         setWinner(m_currentPlayer);
         break;
     case Winner2nd:
-        setScore2(m_score2 + 1);
         setWinner(m_currentPlayer);
         break;
     default:
         setWinner(NO_WINNER);
         break;
     }
-
-    setTotalGames(m_totalGames + 1);
     m_gameFinished = true;
 }
 
@@ -177,6 +162,7 @@ int GameModel::winner() const
 void GameModel::setWinner(int winner)
 {  
     m_winner = winner;
+    StatsModel::updateStats(winner);
     emit winnerChange();
 }
 
@@ -204,42 +190,6 @@ void GameModel::checkGameState()
         }
         finishGame(Draw);
     }
-}
-
-int GameModel::score1() const
-{
-    return m_score1;
-}
-
-void GameModel::setScore1(int player1Score)
-{
-    m_score1 = player1Score;
-    _stats.setValue("Score1", player1Score);
-    emit score1Change();
-}
-
-int GameModel::score2() const
-{
-    return m_score2;
-}
-
-void GameModel::setScore2(int player2Score)
-{
-    m_score2 = player2Score;
-    _stats.setValue("Score2", player2Score);
-    emit score2Change();
-}
-
-int GameModel::totalGames() const
-{
-    return m_totalGames;
-}
-
-void GameModel::setTotalGames(int totalGames)
-{
-    m_totalGames = totalGames;
-    _stats.setValue("TotalGames", totalGames);
-    emit totalGamesChanged();
 }
 
 int GameModel::currentPlayer() const

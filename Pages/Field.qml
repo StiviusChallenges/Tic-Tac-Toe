@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import org.game.engine 1.0
+import org.stats.model 1.0
 
 import "../Components"
 import "../GameComponents"
@@ -51,7 +52,7 @@ Item {
     GameModel {
         id: gameModel
         onWinnerChange: {
-            if(gameModel.winner)
+            if(winner)
             {
                 dialog.textToShow = "Player " + gameModel.winner + " won this game!"
             }
