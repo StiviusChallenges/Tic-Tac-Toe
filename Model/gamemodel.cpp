@@ -32,6 +32,7 @@ GameModel::GameModel(QObject* parent) :
             makeAMovement();
         }
     });
+    srand(time(NULL));
 }
 
 void GameModel::changeTurn()
@@ -194,7 +195,6 @@ GameModel::State GameModel::checkGameState(const Matrix& field, int currentPlaye
 {
     if(horizontalOrVerticalWin(field) || diagonalWin(field))
     {
-        qDebug() << "test";
         return static_cast<State>(currentPlayer);
     }
     else
@@ -252,6 +252,17 @@ int GameModel::getScore(State state)
     return -1;
 }
 
+Decision GameModel::getRandomCorrectDecision(int decisionValue, std::map<int, int> scores)
+{
+    std::vector<Decision> correctDecisions;
+    for(const auto& p : scores)
+    {
+        if(p.second == decisionValue)
+            correctDecisions.push_back(p);
+    }
+    return correctDecisions[rand() % correctDecisions.size()];
+}
+
 Decision GameModel::minimax(std::map<int, int> scores, int currentPlayer)
 {
     std::map<int, int>::iterator decision;
@@ -267,7 +278,8 @@ Decision GameModel::minimax(std::map<int, int> scores, int currentPlayer)
            return p1.second < p2.second;
         });
     }
-    return std::make_pair(decision->first, decision->second);
+    auto randCorrectDecision = getRandomCorrectDecision(decision->second, scores);
+    return std::make_pair(randCorrectDecision.first, randCorrectDecision.second);
 }
 
 Decision GameModel::calculate(Matrix field, int currentPlayer, int cell)

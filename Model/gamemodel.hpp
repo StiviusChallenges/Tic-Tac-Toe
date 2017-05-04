@@ -83,6 +83,7 @@ private:
     int m_difficulty;
     int m_computerTurn = -1;
 
+    Decision getRandomCorrectDecision(int decisionValue, std::map<int, int> scores);
 };
 
 
