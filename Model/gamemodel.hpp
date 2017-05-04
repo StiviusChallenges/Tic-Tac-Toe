@@ -70,9 +70,9 @@ private:
     Decision calculate(Matrix field, int turn, int cell = INVALID_CELL);
     int getScore(State result);
     Decision minimax(std::map<int, int> scores, int currentPlayer);
-    Decision getRandomCorrectDecision(int decisionValue, std::map<int, int> scores);
-    Decision getRandomDecision(std::map<int, int> scores);
-    Decision getFinalDecision(int decisionValue, std::map<int, int> scores);
+    Decision getRandomCorrectDecision(int decisionValue);
+    Decision getRandomDecision();
+    Decision getFinalDecision(int decisionValue);
 
 private:
     Matrix m_field;
@@ -85,6 +85,7 @@ private:
     int m_gameMode;
     int m_difficulty;
     int m_computerTurn = -1;
+    std::map<int, int> m_scores;
 
 };
 

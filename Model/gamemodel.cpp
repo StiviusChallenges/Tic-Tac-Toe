@@ -45,11 +45,13 @@ void GameModel::makeAMovement()
 {
     if(m_currentPlayer == m_computerTurn && m_gameMode == SettingsModel::Computer)
     {
-        auto p = calculate(m_field, m_currentPlayer);
-        qDebug() << "final decision: " << p.second << "; cell: " << p.first;
-        if(p.first != INVALID_CELL)
+//        int correct = calculate(m_field, m_currentPlayer).second;
+        auto decision = getFinalDecision(calculate(m_field, m_currentPlayer).second);
+//        qDebug() << ((correct == decision.second) ? "correct" : "mistake");
+//        qDebug() << "final decision: " << decision.second << "; cell: " << decision.first;
+        if(decision.first != INVALID_CELL)
         {
-            setCellOccupied(p.first);
+            setCellOccupied(decision.first);
         }
     }
 }
@@ -252,10 +254,10 @@ int GameModel::getScore(State state)
     return -1;
 }
 
-Decision GameModel::getRandomCorrectDecision(int decisionValue, std::map<int, int> scores)
+Decision GameModel::getRandomCorrectDecision(int decisionValue)
 {
     std::vector<Decision> correctDecisions;
-    for(const auto& p : scores)
+    for(const auto& p : m_scores)
     {
         if(p.second == decisionValue)
             correctDecisions.push_back(p);
@@ -263,36 +265,36 @@ Decision GameModel::getRandomCorrectDecision(int decisionValue, std::map<int, in
     return correctDecisions[rand() % correctDecisions.size()];
 }
 
-Decision GameModel::getRandomDecision(std::map<int, int> scores)
+Decision GameModel::getRandomDecision()
 {
     std::vector<Decision> allDecisions;
-    for(const auto& p : scores)
+    for(const auto& p : m_scores)
     {
         allDecisions.push_back(p);
     }
     return allDecisions[rand() % allDecisions.size()];
 }
 
-Decision GameModel::getFinalDecision(int decisionValue, std::map<int, int> scores)
+Decision GameModel::getFinalDecision(int decisionValue)
 {
     Decision finalDecision;
-    auto randNumber = rand() % 5;
+    auto randNumber = rand() % 4;
     switch (m_difficulty)
     {
     case SettingsModel::Easy:
-        if(randNumber < 3)
-            finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        if(randNumber < 2)
+            finalDecision = getRandomCorrectDecision(decisionValue);
         else
-            finalDecision = getRandomDecision(scores);
+            finalDecision = getRandomDecision();
         break;
     case SettingsModel::Medium:
-        if(randNumber < 4)
-            finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        if(randNumber < 3)
+            finalDecision = getRandomCorrectDecision(decisionValue);
         else
-            finalDecision = getRandomDecision(scores);
+            finalDecision = getRandomDecision();
         break;
     case SettingsModel::Hard:
-        finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        finalDecision = getRandomCorrectDecision(decisionValue);
         break;
     }
     return std::make_pair(finalDecision.first, finalDecision.second);
@@ -313,7 +315,8 @@ Decision GameModel::minimax(std::map<int, int> scores, int currentPlayer)
            return p1.second < p2.second;
         });
     }
-    return getFinalDecision(decision->second, scores);
+    m_scores = scores;
+    return std::make_pair(decision->first, decision->second);
 }
 
 Decision GameModel::calculate(Matrix field, int currentPlayer, int cell)
