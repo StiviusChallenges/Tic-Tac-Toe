@@ -15,14 +15,13 @@ public:
     explicit StatsModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void clearStats();
-    Q_INVOKABLE static void updateStats(int winner);
+    static void updateStats(int winner);
 
     int score1() const;
     int score2() const;
     int totalGames() const;
 
 private:
-    QSettings _stats;
     int m_score1;
     int m_score2;
     int m_totalGames;

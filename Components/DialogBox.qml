@@ -28,7 +28,7 @@ Item {
                 anchors.topMargin: 50
 
                 text: textToShow
-                font.pixelSize: 30
+                font.pixelSize: 26
             }
 
             CustomButton {

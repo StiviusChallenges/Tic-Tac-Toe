@@ -7,6 +7,10 @@
 const int NO_WINNER = 0;
 const int PLAYER_1 = 1;
 const int PLAYER_2 = 2;
+const int INVALID_CELL = -1;
+
+using Matrix = std::vector<std::vector<int>>;
+using Decision = std::pair<int, int>;
 
 class GameModel : public QObject
 {
@@ -33,10 +37,11 @@ public:
     int currentPlayer() const;
 
 private:
-    enum Result {
+    enum State {
         Draw,
         Winner1st,
-        Winner2nd
+        Winner2nd,
+        None
     };
 
     enum CheckingType {
@@ -46,19 +51,24 @@ private:
         SecondaryDiagonal
     };
 
-    bool isEqualToNextCell(CheckingType type, int column, int row);
-    bool horizontalOrVerticalWin();
-    bool diagonalWin();
-    bool mainDiagonalWin(int currentIndex);
-    bool secondaryDiagonalWin(int currentIndex);
+    bool isEqualToNextCell(const Matrix& field, CheckingType type, int column, int row);
+    bool horizontalOrVerticalWin(const Matrix& field);
+    bool diagonalWin(const Matrix& field);
+    bool mainDiagonalWin(const Matrix& field, int currentIndex);
+    bool secondaryDiagonalWin(const Matrix& field, int currentIndex);
 
-    void finishGame(Result result);
+    void finishGame(State state);
     void clearField();
     void resizeField(size_t sideSize);
     void checkGameState();
 
+    State checkGameState(const Matrix& field, int currentPlayer);
+    Decision calculate(Matrix field, int turn, int cell = INVALID_CELL);
+    int getScore(State result);
+    Decision minimax(std::map<int, int> scores, int currentPlayer);
+
 private:
-    std::vector<std::vector<int>> m_field;
+    Matrix m_field;
     int m_winner = NO_WINNER;
     int m_currentPlayer = PLAYER_1;
     bool m_gameFinished = false;
@@ -66,7 +76,6 @@ private:
     int m_winSequence = DEFAUT_WIN_SEQUENCE;
     int m_gameMode;
     int m_difficulty;
-
 };
 
 
