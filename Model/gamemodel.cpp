@@ -263,6 +263,41 @@ Decision GameModel::getRandomCorrectDecision(int decisionValue, std::map<int, in
     return correctDecisions[rand() % correctDecisions.size()];
 }
 
+Decision GameModel::getRandomDecision(std::map<int, int> scores)
+{
+    std::vector<Decision> allDecisions;
+    for(const auto& p : scores)
+    {
+        allDecisions.push_back(p);
+    }
+    return allDecisions[rand() % allDecisions.size()];
+}
+
+Decision GameModel::getFinalDecision(int decisionValue, std::map<int, int> scores)
+{
+    Decision finalDecision;
+    auto randNumber = rand() % 5;
+    switch (m_difficulty)
+    {
+    case SettingsModel::Easy:
+        if(randNumber < 3)
+            finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        else
+            finalDecision = getRandomDecision(scores);
+        break;
+    case SettingsModel::Medium:
+        if(randNumber < 4)
+            finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        else
+            finalDecision = getRandomDecision(scores);
+        break;
+    case SettingsModel::Hard:
+        finalDecision = getRandomCorrectDecision(decisionValue, scores);
+        break;
+    }
+    return std::make_pair(finalDecision.first, finalDecision.second);
+}
+
 Decision GameModel::minimax(std::map<int, int> scores, int currentPlayer)
 {
     std::map<int, int>::iterator decision;
@@ -278,8 +313,7 @@ Decision GameModel::minimax(std::map<int, int> scores, int currentPlayer)
            return p1.second < p2.second;
         });
     }
-    auto randCorrectDecision = getRandomCorrectDecision(decision->second, scores);
-    return std::make_pair(randCorrectDecision.first, randCorrectDecision.second);
+    return getFinalDecision(decision->second, scores);
 }
 
 Decision GameModel::calculate(Matrix field, int currentPlayer, int cell)

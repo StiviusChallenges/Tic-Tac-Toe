@@ -65,11 +65,14 @@ private:
     void resizeField(size_t sideSize);
     void checkGameState();
 
+    void makeAMovement();
     State checkGameState(const Matrix& field, int currentPlayer);
     Decision calculate(Matrix field, int turn, int cell = INVALID_CELL);
     int getScore(State result);
     Decision minimax(std::map<int, int> scores, int currentPlayer);
-    void makeAMovement();
+    Decision getRandomCorrectDecision(int decisionValue, std::map<int, int> scores);
+    Decision getRandomDecision(std::map<int, int> scores);
+    Decision getFinalDecision(int decisionValue, std::map<int, int> scores);
 
 private:
     Matrix m_field;
@@ -83,7 +86,6 @@ private:
     int m_difficulty;
     int m_computerTurn = -1;
 
-    Decision getRandomCorrectDecision(int decisionValue, std::map<int, int> scores);
 };
 
 

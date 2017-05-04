@@ -31,7 +31,7 @@ CustomGroupBox {
         }
 
         RadioButton {
-            text: "Normal"
+            text: "Medium"
             font.pixelSize: 30
             checked: (difficulty == SettingsModel.Medium) ? true : false
 
