@@ -18,10 +18,11 @@ class GameModel : public QObject
     Q_PROPERTY(int winner READ winner WRITE setWinner NOTIFY winnerChange)
     Q_PROPERTY(int currentPlayer READ currentPlayer)
     Q_PROPERTY(bool gameFinished READ gameFinished)
+    Q_PROPERTY(bool gameStarted READ gameStarted)
 
 signals:
     void winnerChange();
-    void startGame(int sideSize, int gameMode, int difficulty, int winSequence);
+    void startGame(int sideSize, int difficulty, int winSequence, int gameMode, int computerTurn = -1);
     void cellOccupied(int cell);
 
 public:
@@ -34,6 +35,8 @@ public:
     void setWinner(int winner);
 
     bool gameFinished() const;
+    bool gameStarted() const;
+
     int currentPlayer() const;
 
 private:
@@ -66,16 +69,20 @@ private:
     Decision calculate(Matrix field, int turn, int cell = INVALID_CELL);
     int getScore(State result);
     Decision minimax(std::map<int, int> scores, int currentPlayer);
+    void makeAMovement();
 
 private:
     Matrix m_field;
     int m_winner = NO_WINNER;
     int m_currentPlayer = PLAYER_1;
-    bool m_gameFinished = false;
+    bool m_gameFinished = true;
+    bool m_gameStarted = false;
 
     int m_winSequence = DEFAUT_WIN_SEQUENCE;
     int m_gameMode;
     int m_difficulty;
+    int m_computerTurn = -1;
+
 };
 
 

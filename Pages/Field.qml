@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import org.game.engine 1.0
 import org.stats.model 1.0
+import org.settings.model 1.0
 
 import "../Components"
 import "../GameComponents"
@@ -43,9 +44,25 @@ Item {
 
     DialogBox {
         id: dialog
+        textSecondButton: "Close"
 
-        onDialogClosed: {
+        onSecondButtonChosen: {
             loader.source = "MainMenu.qml"
+        }
+    }
+
+    DialogBox {
+        id: choiceBox
+        textToShow: "Choose your side"
+        textFirstButton: "Crosses"
+        textSecondButton: "Noughts"
+
+        onFirstButtonChosen: {
+            gameModel.startGame(settings.sideSize, settings.difficulty, settings.winSequence, SettingsModel.Computer, 2);
+        }
+
+        onSecondButtonChosen: {
+            gameModel.startGame(settings.sideSize, settings.difficulty, settings.winSequence, SettingsModel.Computer, 1);
         }
     }
 
@@ -70,8 +87,15 @@ Item {
         }
 
         Component.onCompleted: {
-            startGame(settings.sideSize, settings.gameMode,
-                      settings.difficulty, settings.winSequence);
+            if(settings.gameMode === SettingsModel.Computer)
+            {
+                choiceBox.showDialog();
+            }
+            else
+            {
+                startGame(settings.sideSize, settings.difficulty,
+                          settings.winSequence, SettingsModel.TwoPlayers);
+            }
         }
     }
 

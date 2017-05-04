@@ -6,6 +6,7 @@ import "../Components"
 
 CustomGroupBox {
     property int mode: SettingsModel.Computer
+    property alias computerModeEnabled: computerModeBtn.enabled
 
     title: qsTr("Game Mode")
     font.pixelSize: 24
@@ -15,6 +16,7 @@ CustomGroupBox {
         spacing: 20
 
         RadioButton {
+            id: computerModeBtn
             text: "Computer mode"
             font.pixelSize: 20
             checked: (mode == SettingsModel.Computer) ? true : false

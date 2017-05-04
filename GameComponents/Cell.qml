@@ -18,19 +18,19 @@ Item {
             hoverEnabled: true
 
             onClicked: {
-                if(!occupied && !gameModel.gameFinished) {
+                if(!occupied && !gameModel.gameFinished && gameModel.gameStarted) {
                     gameModel.setCellOccupied(number);
                 }
             }
 
             onEntered: {
-                if(!occupied && !gameModel.gameFinished) {
+                if(!occupied && !gameModel.gameFinished && gameModel.gameStarted) {
                     cell.state = (gameModel.currentPlayer === 1) ? "cross" :"nought"
                 }
             }
 
             onExited: {
-                if(!occupied && !gameModel.gameFinished) {
+                if(!occupied && !gameModel.gameFinished && gameModel.gameStarted) {
                     cell.state = "empty"
                 }
             }

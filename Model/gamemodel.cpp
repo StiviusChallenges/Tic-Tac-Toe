@@ -15,23 +15,34 @@ const int DRAW_SCORE = 0;
 GameModel::GameModel(QObject* parent) :
     QObject(parent)
 {
-    connect(this, &GameModel::startGame, this, [=](int sideSize, int gameMode,
-                                                   int difficulty, int winSequence){
+    connect(this, &GameModel::startGame, this, [=](int sideSize, int difficulty, int winSequence,
+                                                   int gameMode, int computerTurn = -1){
         m_gameFinished = false;
+        m_gameStarted = true;
         m_gameMode = gameMode;
         m_difficulty = difficulty;
         m_winSequence = winSequence;
         m_winner = NO_WINNER;
+        m_currentPlayer = PLAYER_1;
         resizeField(sideSize);
         clearField();
-    });
 
+        if(computerTurn != -1) {
+            m_computerTurn = computerTurn;
+            makeAMovement();
+        }
+    });
 }
 
 void GameModel::changeTurn()
 {
     m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
-    if(m_currentPlayer == PLAYER_2 && m_gameMode == SettingsModel::Computer)
+    makeAMovement();
+}
+
+void GameModel::makeAMovement()
+{
+    if(m_currentPlayer == m_computerTurn && m_gameMode == SettingsModel::Computer)
     {
         auto p = calculate(m_field, m_currentPlayer);
         qDebug() << "final decision: " << p.second << "; cell: " << p.first;
@@ -154,6 +165,7 @@ void GameModel::finishGame(State result)
         break;
     }
     m_gameFinished = true;
+    m_gameStarted = false;
 }
 
 int GameModel::winner() const
@@ -182,6 +194,7 @@ GameModel::State GameModel::checkGameState(const Matrix& field, int currentPlaye
 {
     if(horizontalOrVerticalWin(field) || diagonalWin(field))
     {
+        qDebug() << "test";
         return static_cast<State>(currentPlayer);
     }
     else
@@ -204,6 +217,11 @@ int GameModel::currentPlayer() const
 bool GameModel::gameFinished() const
 {
     return m_gameFinished;
+}
+
+bool GameModel::gameStarted() const
+{
+    return m_gameStarted;
 }
 
 void GameModel::resizeField(size_t sideSize)

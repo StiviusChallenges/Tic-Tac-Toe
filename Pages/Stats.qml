@@ -72,6 +72,7 @@ Item {
     DialogBox {
         id: message
         textToShow: "Stats has been cleared."
+        textSecondButton: "Close"
     }
 
     StatsModel {

@@ -66,6 +66,16 @@ Item {
 
                 onSideSizeChanged: {
                     winSequenceSettings.modelUpdated(sideSize);
+
+                    if(sideSize > 3)
+                    {
+                        gameModeSettings.mode = SettingsModel.TwoPlayers
+                        gameModeSettings.computerModeEnabled = false;
+                    }
+                    else
+                    {
+                        gameModeSettings.computerModeEnabled = true;
+                    }
                 }
 
                 Component.onCompleted: {
