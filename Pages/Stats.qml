@@ -10,6 +10,7 @@ Item {
         listModel.append({name: "Total games: ", value: statsModel.totalGames});
         listModel.append({name: "Player 1 scores: ", value: statsModel.score1});
         listModel.append({name: "Player 2 scores: ", value: statsModel.score2});
+        listModel.append({name: "Draws: ", value: statsModel.totalGames - statsModel.score1 - statsModel.score2});
     }
 
     ListModel {
