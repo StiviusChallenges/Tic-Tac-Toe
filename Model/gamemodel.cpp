@@ -34,7 +34,6 @@ GameModel::GameModel(QObject* parent) :
             makeAMovement();
         }
     });
-    srand(time(NULL));
 }
 
 void GameModel::changeTurn()
