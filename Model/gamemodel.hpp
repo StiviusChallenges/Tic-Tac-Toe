@@ -87,6 +87,10 @@ private:
     int m_computerTurn = -1;
     std::map<int, int> m_scores;
 
+    std::random_device m_randomDevice;
+    std::mt19937 m_generator;
+    std::uniform_int_distribution<> m_distributor;
+
 };
 
 

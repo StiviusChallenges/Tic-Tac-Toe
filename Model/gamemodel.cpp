@@ -13,7 +13,9 @@ const int WIN_SECOND_SCORE = -10;
 const int DRAW_SCORE = 0;
 
 GameModel::GameModel(QObject* parent) :
-    QObject(parent)
+    QObject(parent),
+    m_generator(m_randomDevice()),
+    m_distributor(1, 10)
 {
     connect(this, &GameModel::startGame, this, [=](int sideSize, int difficulty, int winSequence,
                                                    int gameMode, int computerTurn = -1){
@@ -37,18 +39,18 @@ GameModel::GameModel(QObject* parent) :
 
 void GameModel::changeTurn()
 {
-    m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
-    makeAMovement();
+    if(!m_gameFinished)
+    {
+        m_currentPlayer = (m_currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
+        makeAMovement();
+    }
 }
 
 void GameModel::makeAMovement()
 {
     if(m_currentPlayer == m_computerTurn && m_gameMode == SettingsModel::Computer)
     {
-//        int correct = calculate(m_field, m_currentPlayer).second;
         auto decision = getFinalDecision(calculate(m_field, m_currentPlayer).second);
-//        qDebug() << ((correct == decision.second) ? "correct" : "mistake");
-//        qDebug() << "final decision: " << decision.second << "; cell: " << decision.first;
         if(decision.first != INVALID_CELL)
         {
             setCellOccupied(decision.first);
@@ -277,18 +279,19 @@ Decision GameModel::getRandomDecision()
 
 Decision GameModel::getFinalDecision(int decisionValue)
 {
+
     Decision finalDecision;
-    auto randNumber = rand() % 4;
+    auto randNumber = m_distributor(m_generator);
     switch (m_difficulty)
     {
     case SettingsModel::Easy:
-        if(randNumber < 2)
+        if(randNumber < 9)
             finalDecision = getRandomCorrectDecision(decisionValue);
         else
             finalDecision = getRandomDecision();
         break;
     case SettingsModel::Medium:
-        if(randNumber < 3)
+        if(randNumber < 10)
             finalDecision = getRandomCorrectDecision(decisionValue);
         else
             finalDecision = getRandomDecision();
